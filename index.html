@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Portfólio de Projetos — Diretoria de TI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
+<style>
+
+:root{
+  --navy-900:#071a35;
+  --navy-800:#0b2545;
+  --navy-700:#123566;
+  --navy-600:#1c4c8c;
+  --accent:#2f6fed;
+  --accent-soft:#e8f0fe;
+  --bg:#eef1f6;
+  --surface:#ffffff;
+  --surface-alt:#f6f8fb;
+  --border:#e1e6ef;
+  --text:#101828;
+  --text-muted:#5b6472;
+  --text-faint:#8a93a3;
+  --red:#d9364a;
+  --red-soft:#fdecef;
+  --amber:#dd8f1f;
+  --amber-soft:#fdf3e0;
+  --green:#1f9d63;
+  --green-soft:#e8f8f0;
+  --radius-lg:16px;
+  --radius-md:12px;
+  --radius-sm:8px;
+  --shadow-sm:0 1px 2px rgba(11,37,69,.06);
+  --shadow-md:0 4px 16px rgba(11,37,69,.08);
+  --shadow-lg:0 12px 32px rgba(11,37,69,.14);
+  --font-display:'Sora',sans-serif;
+  --font-body:'Inter',sans-serif;
+  --font-mono:'IBM Plex Mono',monospace;
+}
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:var(--font-body);
+  background:var(--bg);
+  color:var(--text);
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,h4{font-family:var(--font-display);margin:0;color:var(--navy-900)}
+p{margin:0}
+button{font-family:inherit;cursor:pointer}
+select,input{font-family:inherit}
+::selection{background:var(--accent-soft)}
+
+.app{display:flex;min-height:100vh}
+
+/* SIDEBAR */
+.sidebar{
+  width:264px;flex-shrink:0;
+  background:linear-gradient(180deg,var(--navy-800),var(--navy-900));
+  color:#fff;
+  display:flex;flex-direction:column;
+  position:sticky;top:0;height:100vh;
+  z-index:40;
+}
+.brand{display:flex;align-items:center;gap:12px;padding:22px 20px 18px;border-bottom:1px solid rgba(255,255,255,.08)}
+.brand-mark{
+  width:40px;height:40px;border-radius:10px;
+  background:rgba(255,255,255,.1);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-display);font-weight:700;font-size:15px;
+  letter-spacing:.5px;flex-shrink:0;
+  border:1px solid rgba(255,255,255,.18);
+}
+.brand-mark img{width:100%;height:100%;object-fit:contain;border-radius:10px}
+.brand-text{display:flex;flex-direction:column;line-height:1.3}
+.brand-text strong{font-family:var(--font-display);font-size:14.5px;font-weight:700}
+.brand-text span{font-size:11.5px;color:rgba(255,255,255,.55)}
+
+.nav{display:flex;flex-direction:column;gap:2px;padding:14px 12px;flex:1;overflow-y:auto}
+.nav-item{
+  display:flex;align-items:center;gap:10px;
+  background:transparent;border:none;color:rgba(255,255,255,.72);
+  padding:10px 12px;border-radius:9px;text-align:left;
+  font-size:13.5px;font-weight:500;transition:.15s;
+}
+.nav-item .nav-ico{font-size:14px;width:16px;text-align:center;opacity:.85}
+.nav-item:hover{background:rgba(255,255,255,.06);color:#fff}
+.nav-item.active{background:var(--accent);color:#fff;box-shadow:var(--shadow-sm)}
+
+.sidebar-foot{padding:16px 18px 20px;border-top:1px solid rgba(255,255,255,.08)}
+.rag-mini{display:flex;height:8px;border-radius:6px;overflow:hidden;margin-bottom:10px;background:rgba(255,255,255,.08)}
+.rag-mini span{height:100%}
+.update-line{font-size:11px;color:rgba(255,255,255,.5);font-family:var(--font-mono)}
+
+.sidebar-scrim{display:none;position:fixed;inset:0;background:rgba(7,26,53,.5);z-index:35}
+
+/* MAIN COLUMN */
+.main-col{flex:1;min-width:0;display:flex;flex-direction:column}
+
+.topbar{
+  display:flex;align-items:center;gap:18px;
+  padding:18px 28px;background:var(--surface);
+  border-bottom:1px solid var(--border);
+  position:sticky;top:0;z-index:20;
+  flex-wrap:wrap;
+}
+.hamburger{display:none;background:none;border:none;font-size:20px;color:var(--navy-800)}
+.topbar-title{flex:1;min-width:220px}
+.topbar-title h1{font-size:21px;font-weight:700}
+.topbar-title p{font-size:12.5px;color:var(--text-muted);margin-top:2px}
+.topbar-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.search-box input{
+  width:280px;max-width:60vw;padding:9px 14px;border-radius:9px;
+  border:1px solid var(--border);background:var(--surface-alt);
+  font-size:13px;color:var(--text);
+}
+.search-box input:focus{outline:2px solid var(--accent);outline-offset:1px;background:#fff}
+.btn-refresh{
+  display:flex;align-items:center;gap:7px;
+  background:var(--navy-800);color:#fff;border:none;
+  padding:9px 16px;border-radius:9px;font-size:13px;font-weight:600;
+  box-shadow:var(--shadow-sm);
+}
+.btn-refresh:hover{background:var(--navy-700)}
+.spin{display:inline-block}
+.spin.loading{animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.filter-bar{
+  display:flex;flex-wrap:wrap;gap:8px;
+  padding:12px 28px;background:var(--surface-alt);
+  border-bottom:1px solid var(--border);
+}
+.filter-bar select{
+  padding:7px 10px;border-radius:8px;border:1px solid var(--border);
+  background:#fff;font-size:12.5px;color:var(--text);max-width:190px;
+}
+.chip-clear{
+  background:none;border:1px dashed var(--text-faint);color:var(--text-muted);
+  border-radius:8px;padding:7px 12px;font-size:12px;
+}
+.chip-clear:hover{border-color:var(--red);color:var(--red)}
+
+.view-container{padding:24px 28px 60px;max-width:1440px;width:100%;margin:0 auto}
+.view{display:none}
+.view.active{display:block;animation:fadein .25s ease}
+@keyframes fadein{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+.loading-state{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:120px 20px;color:var(--text-muted)}
+.loading-pulse{width:44px;height:44px;border-radius:50%;border:3px solid var(--border);border-top-color:var(--accent);animation:spin 0.8s linear infinite}
+
+/* SECTION HEADERS */
+.section-head{display:flex;align-items:baseline;justify-content:space-between;margin:32px 0 14px;gap:12px;flex-wrap:wrap}
+.section-head:first-child{margin-top:0}
+.section-head h2{font-size:16.5px;font-weight:700}
+.section-head .section-note{font-size:12px;color:var(--text-faint)}
+
+/* KPI GRID */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
+.kpi-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);
+  padding:16px 18px;box-shadow:var(--shadow-sm);position:relative;overflow:hidden;
+}
+.kpi-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent)}
+.kpi-card.k-red::before{background:var(--red)}
+.kpi-card.k-amber::before{background:var(--amber)}
+.kpi-card.k-green::before{background:var(--green)}
+.kpi-label{font-size:11.5px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:.4px}
+.kpi-value{font-family:var(--font-display);font-size:30px;font-weight:700;margin-top:6px;color:var(--navy-900)}
+.kpi-value span{font-size:15px;font-weight:600;color:var(--text-faint)}
+.kpi-sub{font-size:11.5px;color:var(--text-faint);margin-top:4px;font-family:var(--font-mono)}
+
+/* RAG STRIP (signature element) */
+.rag-strip-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:16px 18px;box-shadow:var(--shadow-sm)}
+.rag-strip-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px}
+.rag-strip-top h3{font-size:13px;font-weight:700;color:var(--navy-900)}
+.rag-strip-top span{font-family:var(--font-mono);font-size:11.5px;color:var(--text-faint)}
+.rag-strip{display:flex;height:22px;border-radius:6px;overflow:hidden;border:1px solid var(--border)}
+.rag-seg{display:flex;align-items:center;justify-content:center;color:#fff;font-size:10.5px;font-weight:700;font-family:var(--font-mono);transition:.3s}
+.rag-legend{display:flex;gap:18px;margin-top:10px;flex-wrap:wrap}
+.rag-legend-item{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--text-muted)}
+.dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+
+/* GRID LAYOUTS */
+.two-col{display:grid;grid-template-columns:1.3fr 1fr;gap:16px}
+.grid-auto{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+@media(max-width:900px){.two-col{grid-template-columns:1fr}}
+
+/* EXEC SUMMARY LISTS */
+.exec-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:16px 18px;box-shadow:var(--shadow-sm)}
+.exec-card h3{font-size:13px;font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:7px}
+.exec-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px}
+.exec-list li{display:flex;justify-content:space-between;gap:10px;font-size:12.5px;padding:8px 10px;border-radius:8px;background:var(--surface-alt);cursor:pointer;transition:.15s}
+.exec-list li:hover{background:var(--accent-soft)}
+.exec-list .el-name{font-weight:600;color:var(--text)}
+.exec-list .el-meta{color:var(--text-faint);font-size:11px;font-family:var(--font-mono)}
+.badge{padding:2px 8px;border-radius:20px;font-size:10.5px;font-weight:700;font-family:var(--font-mono);white-space:nowrap}
+.badge-red{background:var(--red-soft);color:var(--red)}
+.badge-amber{background:var(--amber-soft);color:var(--amber)}
+.badge-green{background:var(--green-soft);color:var(--green)}
+.badge-neutral{background:var(--surface-alt);color:var(--text-muted);border:1px solid var(--border)}
+
+/* PROJECT CARDS */
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:14px}
+.pcard{
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);
+  padding:16px;box-shadow:var(--shadow-sm);cursor:pointer;transition:.18s;
+  display:flex;flex-direction:column;gap:10px;position:relative;
+}
+.pcard:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);border-color:var(--accent)}
+.pcard-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.pcard-code{font-family:var(--font-mono);font-size:10.5px;color:var(--text-faint);text-transform:uppercase;letter-spacing:.3px}
+.pcard-title{font-family:var(--font-display);font-size:14.5px;font-weight:700;line-height:1.3;margin-top:2px;color:var(--navy-900)}
+.pcard-tier{font-family:var(--font-mono);font-size:10px;background:var(--surface-alt);border:1px solid var(--border);padding:2px 7px;border-radius:6px;color:var(--text-muted);flex-shrink:0}
+.pcard-meta{display:grid;grid-template-columns:1fr 1fr;gap:6px 10px;font-size:11.5px;color:var(--text-muted)}
+.pcard-meta b{color:var(--text);font-weight:600}
+.pcard-bars{display:flex;flex-direction:column;gap:5px}
+.bar-row{display:flex;align-items:center;gap:8px}
+.bar-row .bar-label{font-size:10px;width:64px;color:var(--text-faint);font-family:var(--font-mono);flex-shrink:0}
+.bar-track{flex:1;height:6px;background:var(--surface-alt);border-radius:4px;overflow:hidden}
+.bar-fill{height:100%;border-radius:4px}
+.bar-fill.evo{background:var(--accent)}
+.bar-fill.plan{background:var(--text-faint)}
+.bar-row .bar-pct{font-family:var(--font-mono);font-size:10.5px;color:var(--text-muted);width:32px;text-align:right;flex-shrink:0}
+.pcard-flag{font-size:10.5px;color:var(--red);font-weight:600;display:flex;align-items:center;gap:5px}
+.pcard-next{font-size:11.5px;color:var(--text-muted);border-top:1px dashed var(--border);padding-top:9px;line-height:1.4}
+.pcard-next b{color:var(--text)}
+.empty-state{text-align:center;padding:60px 20px;color:var(--text-faint);font-size:13.5px}
+
+/* CAPACITY */
+.analyst-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:16px 18px;box-shadow:var(--shadow-sm);cursor:pointer}
+.analyst-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.analyst-name{font-family:var(--font-display);font-weight:700;font-size:14px}
+.analyst-pct{font-family:var(--font-mono);font-weight:700;font-size:13px}
+.cap-track{height:9px;background:var(--surface-alt);border-radius:5px;overflow:hidden;margin-bottom:10px}
+.cap-fill{height:100%;border-radius:5px;transition:.3s}
+.analyst-stats{display:flex;gap:14px;font-size:11px;color:var(--text-muted);flex-wrap:wrap}
+.analyst-stats span b{color:var(--text);font-family:var(--font-mono)}
+.analyst-projects{margin-top:10px;padding-top:10px;border-top:1px dashed var(--border);display:flex;flex-wrap:wrap;gap:6px}
+.mini-tag{font-size:10.5px;background:var(--surface-alt);border:1px solid var(--border);padding:3px 8px;border-radius:6px;color:var(--text-muted)}
+
+/* TABLE (Gerente/PMO view) */
+.data-table{width:100%;border-collapse:collapse;background:var(--surface);border-radius:var(--radius-md);overflow:hidden;box-shadow:var(--shadow-sm)}
+.data-table th{background:var(--navy-800);color:#fff;font-size:11px;text-transform:uppercase;letter-spacing:.3px;padding:11px 14px;text-align:left;font-weight:600}
+.data-table td{padding:11px 14px;font-size:12.5px;border-bottom:1px solid var(--border);color:var(--text)}
+.data-table tr:last-child td{border-bottom:none}
+.data-table tr.tbl-row{cursor:pointer}
+.data-table tr.tbl-row:hover td{background:var(--surface-alt)}
+.owner-block{margin-bottom:26px}
+.owner-header{display:flex;align-items:center;justify-content:space-between;background:var(--surface);border:1px solid var(--border);border-radius:10px 10px 0 0;padding:12px 16px;cursor:pointer}
+.owner-header h3{font-size:13.5px;font-weight:700}
+.owner-header .owner-count{font-family:var(--font-mono);font-size:11.5px;color:var(--text-muted)}
+
+/* CHARTS */
+.chart-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:16px 18px;box-shadow:var(--shadow-sm)}
+.chart-card h3{font-size:12.5px;font-weight:700;margin-bottom:12px;color:var(--navy-900)}
+.chart-card canvas{max-height:280px}
+.charts-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(380px,1fr));gap:14px}
+
+/* RISKS */
+.risk-item{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--amber);border-radius:0 var(--radius-sm) var(--radius-sm) 0;padding:12px 16px;margin-bottom:10px;cursor:pointer}
+.risk-item.sev-alto{border-left-color:var(--red)}
+.risk-item.sev-medio{border-left-color:var(--amber)}
+.risk-item.sev-baixo{border-left-color:var(--green)}
+.risk-item-top{display:flex;justify-content:space-between;gap:10px;margin-bottom:4px}
+.risk-item-top strong{font-size:13px;font-family:var(--font-display)}
+.risk-item p{font-size:12px;color:var(--text-muted);line-height:1.5}
+
+/* MODAL ONE-PAGE */
+.modal-overlay{
+  display:none;position:fixed;inset:0;background:rgba(7,20,40,.6);
+  z-index:100;padding:26px;overflow-y:auto;backdrop-filter:blur(2px);
+}
+.modal-overlay.open{display:flex;align-items:flex-start;justify-content:center}
+.modal-onepage{
+  background:var(--surface);border-radius:18px;max-width:920px;width:100%;
+  box-shadow:var(--shadow-lg);overflow:hidden;margin:20px 0;
+}
+.op-header{background:linear-gradient(135deg,var(--navy-800),var(--navy-900));color:#fff;padding:26px 30px}
+.op-header-top{display:flex;justify-content:space-between;align-items:flex-start;gap:14px}
+.op-code{font-family:var(--font-mono);font-size:11px;color:rgba(255,255,255,.6);text-transform:uppercase}
+.op-title{font-family:var(--font-display);font-size:22px;font-weight:700;margin-top:4px;line-height:1.25}
+.op-close{background:rgba(255,255,255,.12);border:none;color:#fff;width:32px;height:32px;border-radius:8px;font-size:16px;flex-shrink:0}
+.op-close:hover{background:rgba(255,255,255,.22)}
+.op-badges{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.op-badges .badge{font-size:11px;padding:4px 10px}
+.op-body{padding:26px 30px}
+.op-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:22px}
+.op-stat{background:var(--surface-alt);border-radius:10px;padding:12px 14px}
+.op-stat .lbl{font-size:10.5px;color:var(--text-faint);text-transform:uppercase;letter-spacing:.3px;font-weight:600}
+.op-stat .val{font-family:var(--font-mono);font-size:16px;font-weight:700;margin-top:3px;color:var(--navy-900)}
+.op-section{margin-bottom:22px}
+.op-section h4{font-size:12px;text-transform:uppercase;letter-spacing:.4px;color:var(--text-muted);margin-bottom:9px;font-weight:700}
+.op-section p{font-size:13px;line-height:1.6;color:var(--text)}
+.op-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:7px}
+.op-list li{font-size:12.5px;line-height:1.5;padding-left:16px;position:relative;color:var(--text)}
+.op-list li::before{content:'';position:absolute;left:0;top:7px;width:6px;height:6px;border-radius:50%;background:var(--accent)}
+.op-two{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+@media(max-width:640px){.op-two{grid-template-columns:1fr}}
+.op-risk{background:var(--surface-alt);border-radius:8px;padding:10px 12px;margin-bottom:8px;font-size:12px}
+.op-risk b{display:inline-block;margin-right:6px}
+
+.op-objetivo{font-size:13px;color:rgba(255,255,255,.75);font-style:italic;margin-top:9px;line-height:1.55;max-width:640px}
+.op-badges-row{display:flex;justify-content:space-between;align-items:center;margin-top:16px;flex-wrap:wrap;gap:8px 14px}
+.op-updated{font-size:11px;color:rgba(255,255,255,.55);font-family:var(--font-mono);white-space:nowrap}
+
+.op-progress-block{margin-bottom:24px}
+.op-progress-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:9px}
+.op-progress-top .lbl{font-size:11.5px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.4px}
+.op-progress-top .val{font-family:var(--font-mono);font-size:21px;font-weight:700;color:var(--navy-900)}
+.op-progress-track{height:11px;border-radius:6px;background:var(--surface-alt);overflow:hidden;position:relative;border:1px solid var(--border)}
+.op-progress-fill{height:100%;border-radius:5px}
+.op-progress-marker{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--navy-900);opacity:.55}
+.op-progress-sub{margin-top:7px;font-size:11px;color:var(--text-faint);font-family:var(--font-mono);display:flex;align-items:center;gap:6px}
+.op-progress-sub .marker-dot{width:7px;height:7px;border-radius:1px;background:var(--navy-900);opacity:.55;display:inline-block}
+
+.op-team-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:24px}
+.op-team-card{background:var(--surface-alt);border-radius:10px;padding:12px 14px;border:1px solid var(--border)}
+.op-team-card .lbl{font-size:10.5px;color:var(--text-faint);text-transform:uppercase;letter-spacing:.3px;font-weight:600}
+.op-team-card .val{font-family:var(--font-display);font-size:13.5px;font-weight:700;margin-top:5px;color:var(--navy-900);line-height:1.35}
+
+.op-kv-card{background:var(--surface-alt);border-radius:10px;padding:15px 16px;border:1px solid var(--border);height:100%}
+.op-kv-card h4{font-size:12px;text-transform:uppercase;letter-spacing:.4px;color:var(--text-muted);margin-bottom:11px;font-weight:700}
+.op-kv-row{display:flex;justify-content:space-between;gap:10px;font-size:12.5px;padding:7px 0;border-bottom:1px dashed var(--border)}
+.op-kv-row:last-child{border-bottom:none;padding-bottom:0}
+.op-kv-row:first-child{padding-top:0}
+.op-kv-row .k{color:var(--text-muted)}
+.op-kv-row .v{font-weight:700;color:var(--text);font-family:var(--font-mono);text-align:right}
+.op-kv-sub{margin-top:10px;padding-top:10px;border-top:1px solid var(--border)}
+.op-kv-sub .lbl2{font-size:10.5px;color:var(--text-faint);text-transform:uppercase;font-weight:600;margin-bottom:6px;display:block}
+
+.op-resumo{background:var(--accent-soft);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:11px 15px;font-size:12.5px;color:var(--text);line-height:1.6;margin-bottom:24px;font-style:italic}
+.op-comparebar{display:flex;align-items:center;gap:10px;margin-top:8px}
+
+/* RESPONSIVE */
+@media(max-width:980px){
+  .sidebar{position:fixed;left:-280px;transition:.25s;box-shadow:var(--shadow-lg)}
+  .sidebar.open{left:0}
+  .hamburger{display:block}
+  .sidebar-scrim.open{display:block}
+  .two-col{grid-template-columns:1fr}
+}
+@media(max-width:640px){
+  .topbar{padding:14px 16px}
+  .view-container{padding:16px 16px 50px}
+  .filter-bar{padding:10px 16px}
+  .search-box input{width:100%}
+  .op-header,.op-body{padding:20px}
+}
+
+</style>
+</head>
+<body>
+
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-mark" id="logoSlot">TI</div>
+      <div class="brand-text">
+        <strong>Portfólio de Projetos</strong>
+        <span>Diretoria de TI · DETI/GETI</span>
+      </div>
+    </div>
+    <nav class="nav" id="mainNav">
+      <button class="nav-item" data-route="home"><span class="nav-ico">◇</span>Home</button>
+      <button class="nav-item" data-route="projetos"><span class="nav-ico">▤</span>Projetos</button>
+      <button class="nav-item" data-route="capacidade"><span class="nav-ico">◈</span>Capacidade dos Analistas</button>
+      <button class="nav-item" data-route="gerente"><span class="nav-ico">◎</span>Visão por Gerente</button>
+      <button class="nav-item" data-route="pmo"><span class="nav-ico">◐</span>Visão por PMO</button>
+      <button class="nav-item" data-route="indicadores"><span class="nav-ico">◒</span>Indicadores</button>
+      <button class="nav-item" data-route="riscos"><span class="nav-ico">▲</span>Riscos &amp; Pontos de Atenção</button>
+    </nav>
+    <div class="sidebar-foot">
+      <div class="rag-mini" id="ragMini"></div>
+      <div class="update-line">
+        <span id="lastUpdateLabel">—</span>
+      </div>
+    </div>
+  </aside>
+
+  <div class="main-col">
+    <header class="topbar">
+      <button class="hamburger" id="hamburger" aria-label="Menu">☰</button>
+      <div class="topbar-title">
+        <h1 id="viewTitle">Home</h1>
+        <p id="viewSubtitle">Visão executiva do portfólio de tecnologia</p>
+      </div>
+      <div class="topbar-actions">
+        <div class="search-box">
+          <input type="text" id="globalSearch" placeholder="Buscar projeto, código, área, sponsor…">
+        </div>
+        <button class="btn-refresh" id="refreshBtn">
+          <span class="spin" id="refreshIcon">⟳</span> Atualizar agora
+        </button>
+      </div>
+    </header>
+
+    <div class="filter-bar" id="filterBar">
+      <select id="fStatus"><option value="">Status: todos</option></select>
+      <select id="fTier"><option value="">Tier: todos</option></select>
+      <select id="fArea"><option value="">Área: todas</option></select>
+      <select id="fGerente"><option value="">Gerente: todos</option></select>
+      <select id="fAnalista"><option value="">Analista: todos</option></select>
+      <select id="fPmo"><option value="">PMO: todos</option></select>
+      <select id="fSponsor"><option value="">Sponsor: todos</option></select>
+      <button class="chip-clear" id="clearFilters">Limpar filtros ✕</button>
+    </div>
+
+    <main class="view-container" id="viewContainer">
+      <div id="loadingState" class="loading-state">
+        <div class="loading-pulse"></div>
+        <p>Carregando dados do portfólio…</p>
+      </div>
+      <div id="views" style="display:none">
+        <section id="view-home" class="view"></section>
+        <section id="view-projetos" class="view"></section>
+        <section id="view-capacidade" class="view"></section>
+        <section id="view-gerente" class="view"></section>
+        <section id="view-pmo" class="view"></section>
+        <section id="view-indicadores" class="view"></section>
+        <section id="view-riscos" class="view"></section>
+      </div>
+    </main>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal-onepage" id="modalContent"></div>
+</div>
+
+<div class="sidebar-scrim" id="sidebarScrim"></div>
+
+<script>
+
+/* ============ CONFIG ============ */
+const CONFIG = {
+  // 1) Google Sheets > Arquivo > Compartilhar > Publicar na Web
+  // 2) Selecione a aba "Projetos" e o formato CSV > Publicar
+  // 3) Cole aqui o link gerado (termina em .../pub?output=csv)
+  // Enquanto ficar em branco, o painel usa os dados de exemplo (SEED_DATA) abaixo.
+  SHEET_CSV_URL: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQItEvFW9QRQ8l8eIAYLLjuVRlLGQR-2ghk9OOk4ju5N_B_YTIApZMtA3vktJ7XzNO4SvEDkhJtAhRA/pub?gid=0&single=true&output=csv',
+  CAPACITY_WEIGHTS: {1: 3, 2: 2, 3: 1}, // peso por tier (1=semanal, 2=quinzenal, 3=mensal)
+  CAPACITY_TARGET: 8 // soma de pesos considerada 100% de capacidade (ajustável)
+};
+
+const STATUS_META = {
+  'Verde':              {bucket:'prazo',   label:'No prazo',           cls:'green'},
+  'Dentro do Esperado':  {bucket:'prazo',   label:'Dentro do Esperado', cls:'green'},
+  'Amarelo':             {bucket:'atencao', label:'Atenção',            cls:'amber'},
+  'Atenção':             {bucket:'atencao', label:'Atenção',            cls:'amber'},
+  'Controle de Escopo':  {bucket:'atencao', label:'Controle de Escopo', cls:'amber'},
+  'Abaixo do Esperado':  {bucket:'critico', label:'Abaixo do Esperado', cls:'red'},
+  'Vermelho':            {bucket:'critico', label:'Crítico',            cls:'red'},
+  'Prioridade Máxima':   {bucket:'critico', label:'Prioridade Máxima',  cls:'red'}
+};
+function statusMeta(raw){
+  return STATUS_META[(raw||'').trim()] || {bucket:'atencao', label: raw || 'N/I', cls:'amber'};
+}
+const BUCKET_LABEL = {critico:'Crítico', atencao:'Atenção', prazo:'No prazo'};
+
+/* ============ STATE ============ */
+let RAW = [];       // normalized project objects
+let FILTERED = [];  // after filters
+let CHARTS = {};    // Chart.js instances
+let STATE = {
+  route: 'home',
+  filters: {status:'', tier:'', area:'', gerente:'', analista:'', pmo:'', sponsor:'', q:''}
+};
+
+/* ============ SEED DATA (fallback) ============ */
+const SEED_DATA = [{"id":"arq-001-revisao-arquitetura","nome_projeto":"ARQ-001 · Revisão da Arquitetura Tecnológica (Lozinsky)","tier":1,"status":"Amarelo","objetivo":"Diagnosticar a arquitetura tecnológica atual e propor roadmap executivo de evolução para TI.","% de evolução":10,"% Planejado":10,"% tempo do projeto":null,"PMO do Projeto":"Fernando Dadamos | Geovanna Nogueira","Analista Direto":"Carla Rosa","sponsor":"Jorge Cordenonsi","lider_tecnico":"Magnus Cunha | Carla Rosa","gerente_projeto":"Fernando Dadamos | Geovanna Nogueira","area_negocio":"Governance & Strategy","Orçado Capex":536000,"Orçado Opex":null,"Orçado Texto":"536K","realizado":null,"realizado_texto":"N/I","eac":null,"data_inicio":"2026-07-01","data_fim_baseline":null,"data_fim_atual":"2026-10-31","fase_atual":"Kickoff | Jul/07","atividades_executadas":"✅ Kickoff e status report inicial realizados | Jul/26 | ✅ Entrevistas agendadas | Jul/26","proximas_entregas":"🔄 Entrevistas 100% realizadas para levantamento de diagnóstico | Jul/26 | ⚪️ Visita RQ | Ago/26","cronograma_marco":"Kickoff | Jul/07 | Fase 01 – Levantamento & Diagnóstico | Ago/26 | Fase 02 – Visão Futura & Plano de Ação | Out/26","risco1_severidade":"Médio","risco1_texto":"🟠 Agenda de lideranças; alta temporada impacta visita RQ | Jul/26","risco2_severidade":null,"risco2_texto":null,"risco3_severidade":null,"risco3_texto":null,"Resumo Executivo":"Projeto em 10% de evolução versus 10% planejado, com status Amarelo. Principais avanços: Kickoff e status report inicial realizados. Próximo foco: Entrevistas 100% realizadas para levantamento de diagnóstico. Atenção: Agenda de lideranças; alta temporada impacta visita RQ | Jul/26.","ultima_atualizacao":"2026-07-09","responsavel":"Wenderson"},{"id":"crm-001-omnichannel","nome_projeto":"CRM-001 · CRM Omnichannel (Insider + Zoho)","tier":1,"status":"Amarelo","objetivo":"Consolidar canais de relacionamento e automação de CRM com Insider e Zoho.","% de evolução":55,"% Planejado":null,"% tempo do projeto":null,"PMO do Projeto":"4MM | Pedro Santana","Analista Direto":"Victor Vilela","sponsor":"Mariana (MKT) / Jorge Cordenonsi","lider_tecnico":"Wendeson Leal | Victor Vilela","gerente_projeto":"4MM | Pedro Santana","area_negocio":"Experiência do Cliente","Orçado Capex":6300000,"Orçado Opex":null,"Orçado Texto":"R$ 6,3MM","realizado":null,"realizado_texto":"N/I","eac":null,"data_inicio":null,"data_fim_baseline":"2026-06-30","data_fim_atual":null,"fase_atual":"Insider | Multicanais – casos de uso (site, e-mail, sms, app) | xx/xx","atividades_executadas":"✅ Central de Vendas Convencional estabilizada | xx/xx | ✅ POC Zoho concluída | xx/xx","proximas_entregas":"🔄Ativar pós-checkout | xx/xx | 🔄Retomar Niara | xx/xx | 🔄Definir solução de voz | xx/xx","cronograma_marco":"Insider | Multicanais – casos de uso (site, e-mail, sms, app) | xx/xx | Zoho | Central de Vendas Convencional | Jun/26 | Zoho | Central de Fidelização | xx/xx","risco1_severidade":"Médio","risco1_texto":"🟠 Dependências integrações CDP","risco2_severidade":"Médio","risco2_texto":"🟠 Opt-in/opt-out","risco3_severidade":"Médio","risco3_texto":"🟠 SmartTalks","Resumo Executivo":"Projeto em 55% de evolução, com status Amarelo. Principais avanços: Central de Vendas Convencional estabilizada. Próximo foco: Ativar pós-checkout. Atenção: Dependências integrações CDP.","ultima_atualizacao":"2026-07-09","responsavel":"Wenderson"},{"id":"site-001-novo-site-cms","nome_projeto":"SITE-001 · Novo Site CMS (Fase 1)","tier":1,"status":"Amarelo","objetivo":"Entregar novo site com CMS e sustentação da experiência digital Aviva.","% de evolução":70,"% Planejado":null,"% tempo do projeto":null,"PMO do Projeto":"4MM | Pedro Santana","Analista Direto":"Victor Vilela","sponsor":"Mariana (MKT) / Jorge Cordenonsi","lider_tecnico":"Wenderson Leal | Victor Vilela","gerente_projeto":"4MM | Pedro Santana","area_negocio":"Experiência do Cliente","Orçado Capex":null,"Orçado Opex":900000,"Orçado Texto":"Capex N/I; Opex R$ 900K","realizado":null,"realizado_texto":"N/I","eac":null,"data_inicio":null,"data_fim_baseline":null,"data_fim_atual":null,"fase_atual":"Gerador de Landing Pages | xx/xx","atividades_executadas":"✅ Fase 1 sem área logada entregue | Jun/26 | ✅ Sustentação em curso | xx/xx","proximas_entregas":"🔄 Formalizar distrato com a WPP | xx/xx | ⚪️ Avaliar novo parceiro para continuidade do desenvolvimento | xx/xx","cronograma_marco":"Gerador de Landing Pages | xx/xx | Formalizar distrato com a WPP | xx/xx","risco1_severidade":"Médio","risco1_texto":"🟠 Site Aviva entregue parcialmente","risco2_severidade":"Médio","risco2_texto":"🟠 Área logada suspensa","risco3_severidade":null,"risco3_texto":null,"Resumo Executivo":"Projeto em 70% de evolução, com status Amarelo. Principais avanços: Fase 1 sem área logada entregue. Próximo foco: Formalizar distrato com a WPP. Atenção: Site Aviva entregue parcialmente.","ultima_atualizacao":"2026-07-09","responsavel":"Wenderson"},{"id":"pms-001-opera-cloud","nome_projeto":"PMS-001 · PMS Opera Cloud (RQ e CS)","tier":1,"status":"Amarelo","objetivo":"Implantar PMS Opera Cloud nas unidades Rio Quente e Costa do Sauípe.","% de evolução":60,"% Planejado":null,"% tempo do projeto":null,"PMO do Projeto":"4MM | Pedro Santana","Analista Direto":"Wallace Silva","sponsor":"Vinicius Griesi / Jorge Cordenonsi","lider_tecnico":"Wenderson Leal | Wallace Silva","gerente_projeto":"4MM | Pedro Santana","area_negocio":"Operações Hoteleiras","Orçado Capex":500000,"Orçado Opex":null,"Orçado Texto":"R$ 500K","realizado":null,"realizado_texto":"N/I","eac":null,"data_inicio":null,"data_fim_baseline":"2026-08-31","data_fim_atual":"2026-09-30","fase_atual":"CS ago/26 · RQ set/26 (pós-freezing)","atividades_executadas":"UAT Accelerator em curso; cronograma aprovado; marcos iniciais concluídos.","proximas_entregas":"OSEM; parametrização OXI; CDP + APIs.","cronograma_marco":"CS ago/26 · RQ set/26 (pós-freezing)","risco1_severidade":null,"risco1_texto":"Integração Omnibees x Infotravel; FNRH; risco regulatório","risco2_severidade":null,"risco2_texto":null,"risco3_severidade":null,"risco3_texto":null,"Resumo Executivo":"Projeto em 60% de evolução, com status Amarelo. Principais avanços: UAT Accelerator em curso; cronograma aprovado; marcos iniciais concluídos.. Próximo foco: OSEM; parametrização OXI; CDP + APIs.. Atenção: Integração Omnibees x Infotravel; FNRH; risco regulatório.","ultima_atualizacao":"2026-07-09","responsavel":"Wenderson"},{"id":"eco-001-niara","nome_projeto":"ECO-001 · Niara (Motor de Reservas + Central)","tier":1,"status":"Amarelo","objetivo":"Retomar motor de reservas e central, integrando jornada digital e CDP.","% de evolução":30,"% Planejado":null,"% tempo do projeto":null,"PMO do Projeto":"4MM | Pedro Santana","Analista Direto":"Victor Vilela","sponsor":"N/I","lider_tecnico":"Wenderson Leal | Victor Vilela","gerente_projeto":"4MM | Pedro Santana","area_negocio":"Experiência do Cliente","Orçado Capex":2000000,"Orçado Opex":null,"Orçado Texto":"Motor de Reservas R$ 2,0MM","realizado":null,"realizado_texto":"N/I","eac":null,"data_inicio":null,"data_fim_baseline":"2026-08-31","data_fim_atual":"2026-08-31","fase_atual":"Go Live (pós-freezing) | Ago/26","atividades_executadas":"✅ Reunião de retomada realizada | Jul/26 | ✅ Definição do escopo da Fase 1 (Motor de reservas + central + adquirência CIELO)| Jul/26","proximas_entregas":"⚪️ Teste A/B | Ago/26","cronograma_marco":"Go Live (pós-freezing) | Ago/26","risco1_severidade":"Médio","risco1_texto":"🟠 Dependência estabilização Central","risco2_severidade":null,"risco2_texto":null,"risco3_severidade":null,"risco3_texto":null,"Resumo Executivo":"Projeto em 30% de evolução, com status Amarelo. Principais avanços: Reunião de retomada realizada. Próximo foco: Teste A/B. Atenção: Dependência estabilização Central.","ultima_atualizacao":"2026-07-09","responsavel":"Wenderson"},{"id":"eco-002-fidelizacao-programa","nome_projeto":"ECO-002 · Ecossistema de Fidelização (Programa)","tier":1,"status":"Amarelo","objetivo":"Evoluir o ecossistema de fidelização conectando App VO, Aviva X e integrações estruturantes.","% de evolução":45,"% Planejado":null,"% tempo do projeto":null,"PMO do Projeto":"4MM | Pedro Santana","Analista Direto":"Jorge Cordenonsi","sponsor":"Filippo Masello | Camila Souza","lider_tecnico":"Jorge Cordenonsi","gerente_projeto":"4MM | Pedro Santana","area_negocio":"Fidelização","Orçado Capex":8000000,"Orçado Opex":null,"Orçado Texto":"RCI Back R$ 8,0MM; Alloyal Front R$ 1,7MM","realizado":null,"realizado_texto":"N/I","eac":null,"data_inicio":null,"data_fim_baseline":"2026-08-27","data_fim_atual":"2026-08-27","fase_atual":"Rollout App VO 30/jun e 30/jul · Aviva X 27/ago","atividades_executadas":"Piloto App VO; reporte 4MM; marcos iniciais de fidelização.","proximas_entregas":"Reapresentação Aviva X; continuidade rollout; reservas/integrações.","cronograma_marco":"Rollout App VO 30/jun e 30/jul · Aviva X 27/ago","risco1_severidade":null,"risco1_texto":"Recursos internos; integrações complexas; requisitos evoluindo","risco2_severidade":null,"risco2_texto":null,"risco3_severidade":null,"risco3_texto":null,"Resumo Executivo":"Projeto em 45% de evolução, com status Amarelo. Principais avanços: Piloto App VO; reporte 4MM; marcos iniciais de fidelização.. Próximo foco: Reapresentação Aviva X; continuidade rollout; reservas/integrações.. Atenção: Recursos internos; integrações complexas; requisitos evoluindo.","ultima_atualizacao":"2026-07-09","responsavel":"Wenderson"},{"id":"tri-001-multiclubes-v14","nome_projeto":"TRI-001 · Multiclubes/Multivendas v14 (Tríade)","tier":1,"status":"Amarelo","objetivo":"Homologar e implantar a versão 14 do Multiclubes/Multivendas com correções técnicas.","% de evolução":80,"% Planejado":null,"% tempo do projeto":null,"PMO do Projeto":"4MM | Pedro Santana","Analista Direto":"Wenderson Leal","sponsor":"Jorge Cordenonsi","lider_tecnico":"Wenderson Leal","gerente_projeto":"4MM | Pedro Santana","area_negocio":"Sistemas de Vendas","Orçado Capex":1000000,"Orçado Opex":null,"Orçado Texto":"Plataforma Vendas/PDV R$ 1,0MM","realizado":null,"realizado_texto":"N/I","eac":null,"data_inicio":null,"data_fim_baseline":null,"data_fim_atual":null,"fase_atual":"Homologação em curso; produção após aprovação BUs","atividades_executadas":"V14 liberada pela Tríade; TI validou; comunicação Key Users.","proximas_entregas":"Encerrar homologação; deploy produção; contingência.","cronograma_marco":"Homologação em curso; produção após aprovação BUs","risco1_severidade":null,"risco1_texto":"Adesão key users; SLAs Tríade; contingência Infotera","risco2_severidade":null,"risco2_texto":null,"risco3_severidade":null,"risco3_texto":null,"Resumo Executivo":"Projeto em 80% de evolução, com status Amarelo. Principais avanços: V14 liberada pela Tríade; TI validou; comunicação Key Users.. Próximo foco: Encerrar homologação; deploy produção; contingência.. Atenção: Adesão key users; SLAs Tríade; contingência Infotera.","ultima_atualizacao":"2026-07-09","responsavel":"Wenderson"},{"id":"fis-001-reforma-tributaria","nome_projeto":"FIS-001 · Reforma Tributária TI","tier":1,"status":"Verde","objetivo":"Adequar sistemas e fornecedores às mudanças da Reforma Tributária.","% de evolução":10,"% Planejado":10,"% tempo do projeto":null,"PMO do Projeto":"Fernando Dadamos | Geovanna Nogueira","Analista Direto":"Antoniel Souza","sponsor":"Aghatta Rabelo","lider_tecnico":"Wenderson Leal | Antoniel Souza","gerente_projeto":"Fernando Dadamos | Geovanna Nogueira","area_negocio":"Compliance & Fiscal","Orçado Capex":null,"Orçado Opex":null,"Orçado Texto":"N/I","realizado":null,"realizado_texto":"N/I","eac":null,"data_inicio":null,"data_fim_baseline":null,"data_fim_atual":null,"fase_atual":"N/I","atividades_executadas":"✅ Chamados criados para levantamento de requisitos","proximas_entregas":"🔄 Acompanhar fornecedores e normativas fiscais.","cronograma_marco":"N/I","risco1_severidade":"Médio","risco1_texto":"🟠 Roadmap fornecedores","risco2_severidade":"Médio","risco2_texto":"🟠 Requisitos da Reforma não estão 100% definidos","risco3_severidade":null,"risco3_texto":null,"Resumo Executivo":"Projeto em 10% de evolução versus 10% planejado, com status Verde. Principais avanços: Chamados criados para levantamento de requisitos. Próximo foco: Acompanhar fornecedores e normativas fiscais.. Atenção: Roadmap fornecedores.","ultima_atualizacao":"2026-07-09","responsavel":"Wenderson"},{"id":"tri-002-transforma-ti","nome_projeto":"TRI-002 · Programa Transforma TI","tier":1,"status":"Vermelho","objetivo":"Estruturar arquitetura, governança e organização de TI em ondas de transformação.","% de evolução":5,"% Planejado":null,"% tempo do projeto":null,"PMO do Projeto":"Fernando Dadamos | Geovanna Nogueira","Analista Direto":"Carla Rosa","sponsor":"Jorge Cordenonsi","lider_tecnico":"Magnus Cunha e Carla Rosa","gerente_projeto":"Fernando Dadamos | Geovanna Nogueira","area_negocio":"Governance & Strategy","Orçado Capex":null,"Orçado Opex":null,"Orçado Texto":"N/I","realizado":null,"realizado_texto":"N/I","eac":null,"data_inicio":null,"data_fim_baseline":null,"data_fim_atual":null,"fase_atual":"Fase 1 | 3-6 meses ","atividades_executadas":"✅ Dashboard atualizado | Jun/26 | ✅ Fases definidas | Jun/26","proximas_entregas":"🔄 Estruturar arquitetura (governança e organização de TI)","cronograma_marco":"Fase 1 | 3-6 meses | Fase 2 | 6-12 meses","risco1_severidade":"Médio","risco1_texto":"🟠 Capacity 600%","risco2_severidade":null,"risco2_texto":null,"risco3_severidade":null,"risco3_texto":null,"Resumo Executivo":"Projeto em 5% de evolução, com status Vermelho. Principais avanços: Dashboard atualizado. Próximo foco: Estruturar arquitetura (governança e organização de TI). Atenção: Capacity 600%.","ultima_atualizacao":"2026-07-09","responsavel":"Wenderson"},{"id":"loy-001-aviva-x-loyalty","nome_projeto":"LOY-001 · Aviva X — Loyalty (Rock Encantech)","tier":1,"status":"Amarelo","objetivo":"Implantar o programa de loyalty Aviva X com consultoria e sistema dedicado.","% de evolução":50,"% Planejado":null,"% tempo do projeto":null,"PMO do Projeto":"4MM | Pedro Santana","Analista Direto":"Victor Vilela","sponsor":"Jorge Cordenonsi","lider_tecnico":"Wenderson Leal | Victor Vilela","gerente_projeto":"4MM | Pedro Santana","area_negocio":"Fidelização","Orçado Capex":466000,"Orçado Opex":null,"Orçado Texto":"R$ 466K","realizado":null,"realizado_texto":"N/I","eac":466000,"data_inicio":null,"data_fim_baseline":"2026-08-27","data_fim_atual":"2026-08-27","fase_atual":"🟡 Em atenção – A proposta de loyalty está temporariamente suspensa até a conclusão da revisão dos dados e conceitos apresentados pela consultoria","atividades_executadas":"✅ Realização da agenda para apresentação do material final da análise de dados aos diretores da Aviva | Cancelado | ✅ Consolidação e entrega da versão final da análise de dados pela consultoria | Jun/26 | ✅ Avaliação do material apresentado junto aos stakeholders do projeto | Jun/26 | ✅ Identificação de questionamentos relacionados aos dados e conceitos utilizados na análise | Jun/26","proximas_entregas":"🔄 Revisão dos dados, premissas e conceitos apresentados pela consultoria | xx/xx | 🔄 Atualização do material de análise de dados com os ajustes necessários | xx/xx | ⚪️ Reapresentar análise consolidada | xx/xx","cronograma_marco":"🟡 Em atenção – A proposta de loyalty está temporariamente suspensa até a conclusão da revisão dos dados e conceitos apresentados pela consultoria","risco1_severidade":"Médio","risco1_texto":"🟠 Atraso no cronograma do projeto, devido ao cancelamento da apresentação prevista para 08/jul.","risco2_severidade":"Médio","risco2_texto":"🟠 Postergamento da definição e aprovação da proposta de loyalty, impactando as próximas etapas da iniciativa.","risco3_severidade":null,"risco3_texto":null,"Resumo Executivo":"Projeto em 50% de evolução, com status Amarelo. Principais avanços: Realização da agenda para apresentação do material final da análise de dados aos diretores da Aviva. Próximo foco: Revisão dos dados, premissas e conceitos apresentados pela consultoria. Atenção: Atraso no cronograma do projeto, devido ao cancelamento da apresentação prevista para 08/jul..","ultima_atualizacao":"2026-07-09","responsavel":"Wenderson"},{"id":"vo-001-web-app-vo","nome_projeto":"VO-001 · Web APP VO (Fidelização)","tier":2,"status":"Verde","objetivo":"Disponibilizar Web APP para clientes VO, com rollout e comunicação por ondas.","% de evolução":85,"% Planejado":null,"% tempo do projeto":null,"PMO do Projeto":"4MM | Pedro Santana","Analista Direto":"Wenderson Leal","sponsor":"Camila Cunha","lider_tecnico":"Wenderson Leal","gerente_projeto":"4MM | Pedro Santana","area_negocio":"Fidelização","Orçado Capex":700000,"Orçado Opex":null,"Orçado Texto":"App InCasa + Fidelização R$ 700K","realizado":null,"realizado_texto":"N/I","eac":null,"data_inicio":null,"data_fim_baseline":"2026-07-30","data_fim_atual":"2026-07-30","fase_atual":"2ª onda de comunicação 30/jul","atividades_executadas":"1ª onda concluída; rollout segmentado iniciado; capacitação.","proximas_entregas":"Executar 2ª onda; ampliar bases; consolidar feedback.","cronograma_marco":"2ª onda de comunicação 30/jul","risco1_severidade":null,"risco1_texto":"Adesão clientes VO; capacitação equipes","risco2_severidade":null,"risco2_texto":null,"risco3_severidade":null,"risco3_texto":null,"Resumo Executivo":"Projeto em 85% de evolução, com status Verde. Principais avanços: 1ª onda concluída; rollout segmentado iniciado; capacitação.. Próximo foco: Executar 2ª onda; ampliar bases; consolidar feedback.. Atenção: Adesão clientes VO; capacitação equipes.","ultima_atualizacao":"2026-07-09","responsavel":"Wenderson"},{"id":"hef-001-hefesto-tse","nome_projeto":"HEF-001 · Hefesto TSE (Bank of Points)","tier":1,"status":"Verde","objetivo":"Evoluir backend Hefesto/TSE Cloud para suportar banco de pontos e migração.","% de evolução":50,"% Planejado":null,"% tempo do projeto":null,"PMO do Projeto":"Fernando Dadamos | Geovanna Nogueira","Analista Direto":"Alimpio Almeida","sponsor":"N/I","lider_tecnico":"Wenderson Leal | Alimpio Almeida","gerente_projeto":"Fernando Dadamos | Geovanna Nogueira","area_negocio":"Fidelização","Orçado Capex":466000,"Orçado Opex":null,"Orçado Texto":"R$ 466K","realizado":null,"realizado_texto":"N/I","eac":466000,"data_inicio":null,"data_fim_baseline":null,"data_fim_atual":null,"fase_atual":"Cronograma acordado com fornecedor","atividades_executadas":"✅ Backend em desenvolvimento | xx/xx | ✅ Requisitos finalizados | xx/xx","proximas_entregas":"🔄 Estabilização backend Hefesto/TSE Cloud | xx/xx","cronograma_marco":"Cronograma acordado com fornecedor","risco1_severidade":"Médio","risco1_texto":"🟠 Estabilização backend","risco2_severidade":"Médio","risco2_texto":"🟠 Migração de dados","risco3_severidade":null,"risco3_texto":null,"Resumo Executivo":"Projeto em 50% de evolução, com status Verde. Principais avanços: Backend em desenvolvimento. Próximo foco: Estabilização backend Hefesto/TSE Cloud. Atenção: Estabilização backend.","ultima_atualizacao":"2026-07-09","responsavel":"Wenderson"},{"id":"jor-001-jornada-digital","nome_projeto":"JOR-001 · Jornada Digital do Cliente","tier":1,"status":"Vermelho","objetivo":"Estruturar a jornada digital do cliente integrada aos pilares CRM, área logada e omnichannel.","% de evolução":15,"% Planejado":null,"% tempo do projeto":null,"PMO do Projeto":"4MM | Pedro Santana","Analista Direto":"Wenderson Leal","sponsor":"José Humberto","lider_tecnico":"Wenderson Leal","gerente_projeto":"4MM | Pedro Santana","area_negocio":"Experiência do Cliente","Orçado Capex":1200000,"Orçado Opex":null,"Orçado Texto":"R$ 1,2MM","realizado":null,"realizado_texto":"N/I","eac":null,"data_inicio":null,"data_fim_baseline":"2027-06-30","data_fim_atual":"2027-06-30","fase_atual":"Retomada estimada 2º sem/2026","atividades_executadas":"✅ Replanejamento definido | Jun/26 | ✅ Onboarding José Humberto iniciado | Jul/26","proximas_entregas":"🔄 Retomada e definições da frente | Jul/26","cronograma_marco":"Retomada estimada 2º sem/2026","risco1_severidade":"Alto","risco1_texto":"🔴 Depende maturidade CRM/Omnichannel e Área Logada","risco2_severidade":null,"risco2_texto":null,"risco3_severidade":null,"risco3_texto":null,"Resumo Executivo":"Projeto em 15% de evolução, com status Vermelho. Principais avanços: Replanejamento definido. Próximo foco: Retomada e definições da frente. Atenção: Depende maturidade CRM/Omnichannel e Área Logada.","ultima_atualizacao":"2026-07-09","responsavel":"Wenderson"},{"id":"auto-001-autoatendimento-ab","nome_projeto":"AUTO-001 · Autoatendimento A&B","tier":2,"status":"Verde","objetivo":"Implantar iniciativas de autoatendimento e automação em A&B.","% de evolução":87,"% Planejado":87,"% tempo do projeto":87,"PMO do Projeto":"Fernando Dadamos | Geovanna Nogueira","Analista Direto":"Antoniel Souza","sponsor":"Adriano Cossolino","lider_tecnico":"Wenderson Leal | Antoniel Souza","gerente_projeto":"Fernando Dadamos | Geovanna Nogueira","area_negocio":"Operações A&B","Orçado Capex":null,"Orçado Opex":null,"Orçado Texto":"N/I","realizado":null,"realizado_texto":"N/I","eac":null,"data_inicio":null,"data_fim_baseline":null,"data_fim_atual":null,"fase_atual":"Cardápios digitais (Hotburguer e Pizzaria Oliva) | Ago/26","atividades_executadas":"✅ POC Hot Burger concluída | Jun/26 | ✅ Equipamentos parcialmente implantados | Jun/26","proximas_entregas":"🔄 Regularizar sistema e finalizar configurações | xx/xx","cronograma_marco":"Cardápios digitais (Hotburguer e Pizzaria Oliva) | Ago/26 | Totem (Pizzas e Sandubas) | Ago/26","risco1_severidade":"Médio","risco1_texto":"🟠 Entrega de equipamentos","risco2_severidade":"Médio","risco2_texto":"🟠 Homologação Tríade","risco3_severidade":null,"risco3_texto":null,"Resumo Executivo":"Projeto em 87% de evolução versus 87% planejado, com status Verde. Principais avanços: POC Hot Burger concluída. Próximo foco: Regularizar sistema e finalizar configurações. Atenção: Entrega de equipamentos.","ultima_atualizacao":"2026-07-09","responsavel":"Wenderson"},{"id":"lou-001-aviva-lounge","nome_projeto":"LOU-001 · Aviva Lounge (RQ e CS)","tier":2,"status":"Amarelo","objetivo":"Definir modelo operacional e tecnológico do Aviva Lounge nas unidades RQ e CS.","% de evolução":25,"% Planejado":null,"% tempo do projeto":null,"PMO do Projeto":"N/I","Analista Direto":"Wenderson Leal","sponsor":"Vinicius Griesi","lider_tecnico":"Wenderson Leal |","gerente_projeto":"N/I","area_negocio":"Experiência do Cliente","Orçado Capex":null,"Orçado Opex":null,"Orçado Texto":"N/I","realizado":null,"realizado_texto":"N/I","eac":null,"data_inicio":null,"data_fim_baseline":null,"data_fim_atual":null,"fase_atual":"Definição operacional pré-alta temporada","atividades_executadas":"Levantamento inicial de requisitos; discussões com liderança.","proximas_entregas":"Definir modelo com Fernanda/Renilson.","cronograma_marco":"Definição operacional pré-alta temporada","risco1_severidade":null,"risco1_texto":"Modelo comercial; identidade visual; upgrade categoria","risco2_severidade":null,"risco2_texto":null,"risco3_severidade":null,"risco3_texto":null,"Resumo Executivo":"Projeto em 25% de evolução, com status Amarelo. Principais avanços: Levantamento inicial de requisitos; discussões com liderança.. Próximo foco: Definir modelo com Fernanda/Renilson.. Atenção: Modelo comercial; identidade visual; upgrade categoria.","ultima_atualizacao":"2026-07-09","responsavel":"Wenderson"},{"id":"ia-001-conciliai","nome_projeto":"IA-001 · ConciliAI (Conciliações)","tier":2,"status":"Amarelo","objetivo":"Avaliar solução de IA para conciliações e validar POC com segurança jurídica e técnica.","% de evolução":40,"% Planejado":null,"% tempo do projeto":null,"PMO do Projeto":"Marcelo Cezílio","Analista Direto":"Marcelo Cezílio","sponsor":"Marcelo Cezílio","lider_tecnico":"Marcelo Cezílio","gerente_projeto":"Marcelo Cezílio","area_negocio":"Backoffice","Orçado Capex":null,"Orçado Opex":null,"Orçado Texto":"N/I","realizado":null,"realizado_texto":"N/I","eac":null,"data_inicio":null,"data_fim_baseline":null,"data_fim_atual":null,"fase_atual":"NDA assinado; termo POC em análise","atividades_executadas":"NDA assinado; análise jurídica e validação técnica | xx/26","proximas_entregas":"Prosseguir POC após aprovação.","cronograma_marco":"NDA assinado; termo POC em análise","risco1_severidade":null,"risco1_texto":"Aprovação jurídica; validação técnica","risco2_severidade":null,"risco2_texto":null,"risco3_severidade":null,"risco3_texto":null,"Resumo Executivo":"Projeto em 40% de evolução, com status Amarelo. Principais avanços: NDA assinado; análise jurídica e validação técnica. Próximo foco: Prosseguir POC após aprovação.. Atenção: Aprovação jurídica; validação técnica.","ultima_atualizacao":"2026-07-09","responsavel":"Marcelo Cezílio"},{"id":"ia-002-comensais","nome_projeto":"IA-002 · Comensais (Planejamento Oferta A&B)","tier":2,"status":"Vermelho","objetivo":"Apoiar planejamento de oferta A&B com dados e IA para previsão de comensais.","% de evolução":20,"% Planejado":null,"% tempo do projeto":null,"PMO do Projeto":"Marcelo Cezílio","Analista Direto":"Marcelo Cezílio","sponsor":"Fernanda Rodrigues (DEOP A&B)","lider_tecnico":"Marcelo Cezílio","gerente_projeto":"Marcelo Cezílio","area_negocio":"Dados & IA","Orçado Capex":null,"Orçado Opex":null,"Orçado Texto":"N/I","realizado":null,"realizado_texto":"N/I","eac":null,"data_inicio":null,"data_fim_baseline":null,"data_fim_atual":null,"fase_atual":"Bloqueado por infra","atividades_executadas":"Escopo inicial mapeado.","proximas_entregas":"Liberar ferramentas/infra para parceiro.","cronograma_marco":"Bloqueado por infra","risco1_severidade":null,"risco1_texto":"Despriorizado; dependência Infra","risco2_severidade":null,"risco2_texto":null,"risco3_severidade":null,"risco3_texto":null,"Resumo Executivo":"Projeto em 20% de evolução, com status Vermelho. Principais avanços: Escopo inicial mapeado.. Próximo foco: Liberar ferramentas/infra para parceiro.. Atenção: Despriorizado; dependência Infra.","ultima_atualizacao":"2026-07-09","responsavel":"Marcelo Cezílio"},{"id":"ia-003-painel-vendas-ab","nome_projeto":"IA-003 · Painel Monitoramento Vendas A&B","tier":2,"status":"Vermelho","objetivo":"Criar painel para monitoramento de vendas A&B com infraestrutura dedicada.","% de evolução":10,"% Planejado":null,"% tempo do projeto":null,"PMO do Projeto":"Marcelo Cezílio","Analista Direto":"Marcelo Cezílio","sponsor":"Fernanda Rodrigues (DEOP A&B)","lider_tecnico":"Marcelo Cezílio","gerente_projeto":"Marcelo Cezílio","area_negocio":"Dados & IA","Orçado Capex":null,"Orçado Opex":null,"Orçado Texto":"N/I","realizado":null,"realizado_texto":"N/I","eac":null,"data_inicio":null,"data_fim_baseline":null,"data_fim_atual":null,"fase_atual":"Bloqueado por aquisição servidor","atividades_executadas":"Requisitos iniciais mapeados.","proximas_entregas":"Compra e configuração de servidor via Supply.","cronograma_marco":"Bloqueado por aquisição servidor","risco1_severidade":null,"risco1_texto":"Aquisição servidor pendente","risco2_severidade":null,"risco2_texto":null,"risco3_severidade":null,"risco3_texto":null,"Resumo Executivo":"Projeto em 10% de evolução, com status Vermelho. Principais avanços: Requisitos iniciais mapeados.. Próximo foco: Compra e configuração de servidor via Supply.. Atenção: Aquisição servidor pendente.","ultima_atualizacao":"2026-07-09","responsavel":"Marcelo Cezílio"},{"id":"ia-004-agente-clara","nome_projeto":"IA-004 · Agente Clara (Help Desk IA)","tier":2,"status":"Amarelo","objetivo":"Operar POC de help desk com IA e estruturar roadmap e métricas.","% de evolução":60,"% Planejado":null,"% tempo do projeto":null,"PMO do Projeto":"Marcelo Cezílio","Analista Direto":"Marcelo Cezílio","sponsor":"Cleiton Dantas","lider_tecnico":"Marcelo Cezílio","gerente_projeto":"Marcelo Cezílio","area_negocio":"Dados & IA","Orçado Capex":null,"Orçado Opex":null,"Orçado Texto":"N/I","realizado":null,"realizado_texto":"N/I","eac":null,"data_inicio":null,"data_fim_baseline":null,"data_fim_atual":null,"fase_atual":"Sem roadmap definido","atividades_executadas":"Em operação com pendências; POC ativa.","proximas_entregas":"Definir roadmap e métricas.","cronograma_marco":"Sem roadmap definido","risco1_severidade":null,"risco1_texto":"Documentação incompleta; ausência métricas de uso","risco2_severidade":null,"risco2_texto":null,"risco3_severidade":null,"risco3_texto":null,"Resumo Executivo":"Projeto em 60% de evolução, com status Amarelo. Principais avanços: Em operação com pendências; POC ativa.. Próximo foco: Definir roadmap e métricas.. Atenção: Documentação incompleta; ausência métricas de uso.","ultima_atualizacao":"2026-07-09","responsavel":"Marcelo Cezílio"},{"id":"gov-001-governanca-ti","nome_projeto":"GOV-001 · Governança de TI (POL-58)","tier":1,"status":"Verde","objetivo":"Consolidar governança de TI com ritos, score card e aderência das áreas.","% de evolução":9,"% Planejado":99,"% tempo do projeto":99,"PMO do Projeto":"Fernando Dadamos | Geovanna Nogueira","Analista Direto":"Carla Rosa","sponsor":"Jorge Cordenonsi","lider_tecnico":"Fernando Dadamos | Carla Rosa","gerente_projeto":"Fernando Dadamos | Geovanna Nogueira","area_negocio":"Governance & Strategy","Orçado Capex":25500000,"Orçado Opex":null,"Orçado Texto":"25,5 MM","realizado":24300000,"realizado_texto":"24,3 MM","eac":null,"data_inicio":null,"data_fim_baseline":null,"data_fim_atual":null,"fase_atual":"Contínuo","atividades_executadas":"POL-58 emitida; ritos estabelecidos; score card em uso.","proximas_entregas":"Consolidar ritos e ampliar aderência.","cronograma_marco":"Contínuo","risco1_severidade":null,"risco1_texto":"Aderência das áreas ao processo","risco2_severidade":null,"risco2_texto":null,"risco3_severidade":null,"risco3_texto":null,"Resumo Executivo":"Projeto em 9% de evolução versus 99% planejado, com status Verde. Principais avanços: POL-58 emitida; ritos estabelecidos; score card em uso.. Próximo foco: Consolidar ritos e ampliar aderência.. Atenção: Aderência das áreas ao processo.","ultima_atualizacao":"2026-07-09","responsavel":"Fernando Dadamos"},{"id":"infra-001-freezing","nome_projeto":"INFRA-001 · Plano de Alta Temporada (Freezing)","tier":1,"status":"Verde","objetivo":"Garantir estabilidade operacional durante alta temporada com freezing e monitoramento.","% de evolução":85,"% Planejado":85,"% tempo do projeto":85,"PMO do Projeto":"Fernando Dadamos | Geovanna Nogueira","Analista Direto":"Breno de Sá","sponsor":"Cleiton Dantas / Jorge Cordenonsi","lider_tecnico":"Cleiton Dantas | Breno de Sá","gerente_projeto":"Fernando Dadamos | Geovanna Nogueira","area_negocio":"Operações & Infra","Orçado Capex":null,"Orçado Opex":null,"Orçado Texto":"N/A","realizado":null,"realizado_texto":"N/A","eac":null,"data_inicio":null,"data_fim_baseline":"2026-07-31","data_fim_atual":"2026-07-31","fase_atual":"Fim do freezing 31/jul","atividades_executadas":"✅ Definição e aprovação do período oficial de Freezing para alta temporada | Jun/2026 | ✅ Comunicação às áreas sobre suspensão de mudanças em produção | Jun/2026 | ✅ Definição das regras de exceção para mudanças emergenciais | Jun/2026 | ✅ Mapeamento dos ambientes críticos de operação | Jun/2026 | ✅ Priorização da infraestrutura crítica para alta temporada (Internet, Wi-Fi Hotéis, Telefonia, TVs, Totens, Equipamentos de Recepção, Sistemas operacionais de atendimento ao hóspede) | Jul/2026 | ✅ Formalização do Comitê de Avaliação de Mudanças para exceções durante o período de congelamento | Jul/2026","proximas_entregas":"🔄 Monitoramento contínuo dos sistemas críticos durante a alta temporada | Jul/2026 | 🔄 Avaliação semanal das solicitações excepcionais de mudança | Jul/2026 | 🔄 Reuniões semanais da liderança de TI para acompanhamento do período de Freezing | Jul/2026 | 🔄 Reavaliação da capacidade operacional dos times de suporte e infraestrutura | Jul/2026 | 🔄 Planejamento de retomada controlada das mudanças | Jul/2026 | ⚪️ Encerramento oficial do período de Freezing | Jul/2026","cronograma_marco":"Fim do freezing 31/jul","risco1_severidade":null,"risco1_texto":"Alertas AP; equipamentos críticos","risco2_severidade":null,"risco2_texto":null,"risco3_severidade":null,"risco3_texto":null,"Resumo Executivo":"Projeto em 85% de evolução versus 85% planejado, com status Verde. Principais avanços: Definição e aprovação do período oficial de Freezing para alta temporada. Próximo foco: Monitoramento contínuo dos sistemas críticos durante a alta temporada. Atenção: Alertas AP; equipamentos críticos.","ultima_atualizacao":"2026-07-09","responsavel":"Cleiton Dantas"},{"id":"corp-025-dinner-show-bravo","nome_projeto":"CORP-025 · Dinner Show","tier":2,"status":"Atenção","objetivo":"Acompanhar frente corporativa Dinner Show Bravo com participação técnica de TI.","% de evolução":15,"% Planejado":null,"% tempo do projeto":null,"PMO do Projeto":"N/I","Analista Direto":null,"sponsor":"N/I","lider_tecnico":"N/I","gerente_projeto":"N/I","area_negocio":"Corporativo","Orçado Capex":null,"Orçado Opex":null,"Orçado Texto":"N/I","realizado":null,"realizado_texto":"N/I","eac":null,"data_inicio":null,"data_fim_baseline":null,"data_fim_atual":null,"fase_atual":"✅ Projeto incorporado ao portfólio corporativo | Jan/2026","atividades_executadas":"✅ Desenvolvimento do Cardápio Digital integrado à plataforma da Tríade | xx/2026 | ✅ Conclusão dos ajustes finais do Cardápio Digital | Jun/2026 | ✅ Parametrização para utilização de QR Codes nas mesas do Dinner Show | xx/2026 | ✅ Definição da jornada digital de compra e reserva no Multiclubes | xx/2026 | ✅ Configuração da integração para vouchers e seleção prévia dos pratos | xx/2026 | ✅ Definição da arquitetura de venda utilizando site, Multiclubes e jornada CRM | xx/2026 | ✅ Estruturação da Landing Page exclusiva do Dinner Show | xx/2026 | ✅ Validação operacional da experiência digital de consumo e pedidos | xx/2026","proximas_entregas":"🔄 Finalizar geração e implantação dos QR Codes das mesas | Jul/2026 | 🔄 Disponibilizar Landing Page exclusiva do Dinner Show | Jul/2026 | 🔄 Concluir integração de vendas no Multiclubes | Jul/2026 | 🔄 Vincular fotos oficiais ao Cardápio Digital | Jul/2026 | 🔄 Validar experiência completa da jornada digital do cliente | Jul/2026 | 🔄 Apoiar abertura das vendas internas | Jul/2026 | ⚪️ Apoiar Soft Opening operational | Ago/2026","cronograma_marco":"✅ Projeto incorporado ao portfólio corporativo | Jan/2026 | ✅ Desenvolvimento do Cardápio Digital | 1º sem/2026 | ✅ Definição do fluxo de vendas digitais | Jun/2026 | ✅ Entrega do Cardápio Digital | Jun/2026 | 🔄 Abertura das vendas internas | Jul/2026 | 🔄 Entrega da obra | Jul/2026 | 🔄 Conclusão da jornada digital de vendas | Jul/2026 | 🔄 Treinamento dos associados | Jul/2026 | ⚪️ Eventos de Soft Open | Ago/2026 | 🎯 Início da operação do Dinner Show | Ago/2026","risco1_severidade":"Alto","risco1_texto":"🔴 Dependência da entrega da obra para início efetivo da operação.","risco2_severidade":"Alto","risco2_texto":"🔴 Integração entre Multiclubes, jornada de vendas, reservas e operação.","risco3_severidade":"Alto","risco3_texto":"🔴 Definições pendentes sobre venda de adicionais e parametrizações operacionais.","Resumo Executivo":"Projeto em 15% de evolução, com status Atenção. Principais avanços: Desenvolvimento do Cardápio Digital integrado à plataforma da Tríade. Próximo foco: Finalizar geração e implantação dos QR Codes das mesas. Atenção: Dependência da entrega da obra para início efetivo da operação..","ultima_atualizacao":"2026-07-09","responsavel":"Wenderson"},{"id":"corp-026-sala-relacionamento-sp","nome_projeto":"CORP-026 · Sala Relacionamento São Paulo","tier":3,"status":"Dentro do Esperado","objetivo":"Aguardar decisão executiva para continuidade da sala de relacionamento em São Paulo.","% de evolução":37,"% Planejado":38,"% tempo do projeto":38,"PMO do Projeto":"N/I","Analista Direto":null,"sponsor":"N/I","lider_tecnico":"N/I","gerente_projeto":"N/I","area_negocio":"Corporativo","Orçado Capex":null,"Orçado Opex":null,"Orçado Texto":"N/I","realizado":null,"realizado_texto":"N/I","eac":null,"data_inicio":null,"data_fim_baseline":null,"data_fim_atual":null,"fase_atual":"✅ Conclusão do Guia Orientativo da Sala SP | Mar/2026","atividades_executadas":"✅ Revisão do Guia Orientativo da Sala de Relacionamento São Paulo | Abr/2026. | ✅ Definição do conceito tecnológico da sala imersiva apresentações de produtos, destinos e experiências Aviva | Mar/2026. | ✅ Validação preliminar da infraestrutura de TI da unidade | Jun/2026. | ✅ Estruturação do ambiente com atendimento digital e operação suportada por tablets | xx/2026 | ✅ Definição dos requisitos iniciais de CFTV da Sala de Relacionamento | xx/2026 | ✅ Participação da TI nas definições da operação e experiência digital do ambiente | xx/2026","proximas_entregas":"🔄 Concluir validação da infraestrutura de TI da unidade | Jul/2026. | 🔄 Finalizar especificação e implantação do CFTV da Sala de Relacionamento | Jul/2026 | 🔄 Instalação dos ativos tecnológicos para operação da sala imersiva | Jul/2026 | 🔄 Validação operacional dos equipamentos de atendimento e relacionamento | Jul/2026 | ⚪️ Suporte ao Soft Opening da operação | Ago/2026 | ⚪️ Estabilização operacional pós-abertura | Ago/2026","cronograma_marco":"✅ Conclusão do Guia Orientativo da Sala SP | Mar/2026 | ✅ Início das definições operacionais e de experiência | 1º sem/2026 | ✅ Aprovação do enxoval de sinalização | Jun/2026 | ✅ Revisão executiva do orçamento | Jun/2026 | 🔄 Conclusão da obr | Jul/2026 | 🔄 Validação final de TI | Jul/2026 | ⚪️ Soft Opening | Ago/2026 | 🎯 Abertura Operacional Oficial | 03/08/2026","risco1_severidade":"Alto","risco1_texto":"🔴 Validação final da infraestrutura de TI pendente.","risco2_severidade":"Médio","risco2_texto":"🟠 Dependência de alinhamento simultâneo entre Obra, TI, Marketing, Operação e VO.","risco3_severidade":"Médio","risco3_texto":"🟠 Projeto em status \"Em análise\" no portfólio TI, dependendo de decisões executivas e priorização.","Resumo Executivo":"Projeto em 37% de evolução versus 38% planejado, com status Dentro do Esperado. Principais avanços: Revisão do Guia Orientativo da Sala de Relacionamento São Paulo. Próximo foco: Concluir validação da infraestrutura de TI da unidade. Atenção: Validação final da infraestrutura de TI pendente..","ultima_atualizacao":"2026-07-09","responsavel":"Wenderson"},{"id":"corp-027-retrofit-refugio","nome_projeto":"CORP-027 · Retrofit Hotel Refúgio Grand Premium","tier":2,"status":"Dentro do Esperado","objetivo":"Controlar escopo e dependências de TI no retrofit do Hotel Refúgio.","% de evolução":99,"% Planejado":99,"% tempo do projeto":99,"PMO do Projeto":"Thamires Ribeiro","Analista Direto":"Antoniel Souza","sponsor":"Paulo Schneider","lider_tecnico":"Wenderson Leal | Antoniel Souza | Breno de Sá | Dielson Freitas","gerente_projeto":"Thamires Ribeiro","area_negocio":"Corporativo / Retrofit","Orçado Capex":null,"Orçado Opex":null,"Orçado Texto":"N/I","realizado":null,"realizado_texto":"N/I","eac":null,"data_inicio":null,"data_fim_baseline":null,"data_fim_atual":null,"fase_atual":"🔄 Execução das obras complementares de lobby e Centro de Convenções | 2º sem/2026","atividades_executadas":"✅ Levantamento dos impactos tecnológicos associados à reforma das fachadas e áreas comuns | xx/2026 | ✅ Suporte às áreas de Operações e CX na avaliação de impactos nos processos digitais da jornada do hóspede | xx/2026 | ✅ Avaliação dos impactos tecnológicos das intervenções em áreas comuns, lobby e espaços de circulação | xx/2026 | ✅ Acompanhamento dos requisitos operacionais decorrentes da inauguração do restaurante Pequi | xx/2026 | ✅ Apoio às áreas responsáveis na validação das necessidades de infraestrutura durante a execução das obras | xx/2026 | ✅ Entregue ATM da Recepção | Jun/2026","proximas_entregas":"🔄 Apoiar a padronização dos processos digitais relacionados à experiência do hóspede | Jul/2026. | 🔄 Avaliar necessidades complementares de infraestrutura tecnológica para novas áreas remodeladas | Jul-Ago/2026. | ⚪️ Apoiar implantação dos ambientes de lobby e Centro de Convenções | 2º sem/2026. | ⚪️ Suportar as definições operacionais decorrentes da estabilização do Restaurante Pequi | 2º sem/2026.","cronograma_marco":"🔄 Execução das obras complementares de lobby e Centro de Convenções | 2º sem/2026","risco1_severidade":"Alto","risco1_texto":"🔴 Execução das obras parcialmente operacionais. Risco de segurança e rompimento de fibra","risco2_severidade":"Médio","risco2_texto":"🟠 Necessidade de monitoramento contínuo da experiência do cliente no Restaurante Pequi","risco3_severidade":"Médio","risco3_texto":"🟠 Dependência da coordenação entre Operação, CX, Infraestrutura e Engenharia para conclusão das etapas finais.","Resumo Executivo":"Projeto em 99% de evolução versus 99% planejado, com status Dentro do Esperado. Principais avanços: Levantamento dos impactos tecnológicos associados à reforma das fachadas e áreas comuns. Próximo foco: Apoiar a padronização dos processos digitais relacionados à experiência do hóspede. Atenção: Execução das obras parcialmente operacionais. Risco de segurança e rompimento de fibra.","ultima_atualizacao":"2026-07-09","responsavel":"Wenderson"},{"id":"corp-028-retrofit-pousada","nome_projeto":"CORP-028 · Retrofit Hotel Pousada","tier":2,"status":"Dentro do Esperado","objetivo":"Acompanhar requisitos e dependências de TI no retrofit do Hotel Pousada.","% de evolução":58,"% Planejado":58,"% tempo do projeto":58,"PMO do Projeto":"Thamires Ribeiro","Analista Direto":"Antoniel Souza","sponsor":"Paulo Shneider","lider_tecnico":"Wenderson Leal | Antoniel Souza | Breno de Sá | Dielson Freitas","gerente_projeto":"Thamires Ribeiro","area_negocio":"Corporativo / Retrofit","Orçado Capex":21300000,"Orçado Opex":null,"Orçado Texto":"21,3MM","realizado":19800000,"realizado_texto":"19,8MM","eac":null,"data_inicio":null,"data_fim_baseline":null,"data_fim_atual":null,"fase_atual":"✅ Reforma dos Panos 9 e 10 em execução | Jul/2026.","atividades_executadas":"✅ Revisão dos requisitos dos Totens de Entretenimento e levantamento preliminar dos equipamentos necessários para composição do orçamento do projeto | Jul/2026 | ✅ Avaliação com Entretenimento dos itens de tecnologia que deverão compor o retrofit das áreas comuns | Jul/2026 | ✅ Revisão dos impactos tecnológicos decorrentes das alterações de layout da cafeteria e áreas de A&B. | Jul/2026 | ✅ Consolidação técnicas preliminares para os ambientes reformados do Lobby, Recepção e Marolo | Jul/2026.","proximas_entregas":"🔄 Complementar a relação definitiva dos equipamentos dos Totens de Entretenimento | Jul/2026 | 🔄 Validar impacto orçamentário dos equipamentos tecnológicos previstos para os ambientes reformados | Jul/2026 | 🔄 Adquirir novo totem de balcão para o Marolo | Jul/2026 | ⚪️ Refinar especificações técnicas do mobiliário com interfaces tecnológicas | Ago/2026 | ⚪️ Apoiar conceitos da nova loja junto às áreas de Produto, Estratégia, CX, Operações e Arquitetura | Ago/2026 | ⚪️ Definir infraestrutura tecnológica das áreas reformadas (Recepção, Lobby e Marolo) | Ago/2026 | ⚪️ Apoiar a implantação tecnológica durante a execução civil | Ago-Dez/2026","cronograma_marco":"✅ Reforma dos Panos 9 e 10 em execução | Jul/2026. | ✅ Kickoff Branding | Jul/2026. | ✅ Revisão dos equipamentos da cafeteria e áreas de A&B | Jul/2026. | 🔄 Definição final da realocação do parceiro Frutos de Goiás | Jul/2026. | ⚪️ Aprovação e aquisição do mobiliário definitivo | Ago/2026. | ⚪️ Início das obras do Marolo, Recepção e Lobby | Ago/2026. | ⚪️ Implantação dos componentes tecnológicos | Ago-Nov/2026 | ⚪️Finalização do Branding | Set-Out/2026. | 🎯 Conclusão da reforma Recepção / Lobby / Marolo | Dez/2026.","risco1_severidade":"Médio","risco1_texto":"🟠 Definição dos equipamentos dos Totens de Entretenimento ainda pendente e com impacto potencial no orçamento do projeto.","risco2_severidade":null,"risco2_texto":null,"risco3_severidade":null,"risco3_texto":null,"Resumo Executivo":"Projeto em 58% de evolução versus 58% planejado, com status Dentro do Esperado. Principais avanços: Revisão dos requisitos dos Totens de Entretenimento e levantamento preliminar dos equipamentos necessários para composição do orçamento do projeto. Próximo foco: Complementar a relação definitiva dos equipamentos dos Totens de Entretenimento. Atenção: Definição dos equipamentos dos Totens de Entretenimento ainda pendente e com impacto potencial no orçamento do projeto..","ultima_atualizacao":"2026-07-09","responsavel":"Wenderson"},{"id":"corp-029-eficiencia-aviva","nome_projeto":"CORP-029 · Eficiência Aviva (Integrações Gupy & Smartleader)","tier":2,"status":"Amarelo","objetivo":"Acompanhar integrações Gupy e Smartleader no programa Eficiência Aviva.","% de evolução":10,"% Planejado":null,"% tempo do projeto":null,"PMO do Projeto":"Thamires Ribeiro","Analista Direto":"Victor Vilela","sponsor":"N/I","lider_tecnico":"Wenderson Leal | Victor Vilela","gerente_projeto":"Thamires Ribeiro","area_negocio":"Corporativo","Orçado Capex":null,"Orçado Opex":null,"Orçado Texto":"N/I","realizado":null,"realizado_texto":"N/I","eac":null,"data_inicio":null,"data_fim_baseline":null,"data_fim_atual":null,"fase_atual":"✅ Projeto formalizado no portfólio corporativo| Jul/2026","atividades_executadas":"✅ Projeto incorporado ao portfólio corporativo de transformação | xx/202 | ✅ Definição da liderança técnica de Tecnologia para condução da integração | xx/202 | ✅ Mapeamento inicial das dependências técnicas da integração Gupy e Smartleader | xx/202 | ✅ Consolidação preliminar das demandas de TH relacionadas à automação e integração de processos | xx/202 | ✅ Avaliação de expansão do ambiente Gupy com recursos de IA e automação para RH | xx/202 | ✅ Inclusão do projeto nos fóruns semanais de acompanhamento de Eficiência Aviva | xx/202","proximas_entregas":"🔄 Consolidar requisitos técnicos e funcionais da integração Gupy × Smartleader. | Jul/2026. | 🔄 Confirmar dependências técnicas e integrações necessárias | Jul/2026. | ⚪️ Validar arquitetura de integração entre plataformas de RH | Ago/2026 | ⚪️ Definir escopo final de automações e utilização de IA | Ago/2026. | ⚪️ Elaborar roadmap executivo de implantação | Após conclusão dos requisitos.","cronograma_marco":"✅ Projeto formalizado no portfólio corporativo| Jul/2026 | ✅ Definição da liderança técnica e PM | Jul/2026 | ✅ Início da consolidação de requisitos | Jul/2026 | 🟡 Validação das dependências técnicas. Jul/2026 | 🟡 Definição da arquitetura de integração | A definir | 🟡 Planejamento executivo da implantação | A definir","risco1_severidade":"Alto","risco1_texto":"🔴 Dependências técnicas ainda não concluídas.","risco2_severidade":"Alto","risco2_texto":"🔴 Integrações entre plataformas ainda em definição.","risco3_severidade":"Médio","risco3_texto":"🟠 Requisitos funcionais em consolidação.","Resumo Executivo":"Projeto em 10% de evolução, com status Amarelo. Principais avanços: Projeto incorporado ao portfólio corporativo de transformação. Próximo foco: Consolidar requisitos técnicos e funcionais da integração Gupy × Smartleader.. Atenção: Dependências técnicas ainda não concluídas..","ultima_atualizacao":"2026-07-09","responsavel":"Wenderson"},{"id":"corp-030-pec-221-19","nome_projeto":"CORP-030 · PEC 221/19 (Escalas de trabalho)","tier":1,"status":"Prioridade Máxima","objetivo":"Priorizar levantamento regulatório e técnico para impactos em folha, ponto e escalas.","% de evolução":5,"% Planejado":null,"% tempo do projeto":null,"PMO do Projeto":"N/I","Analista Direto":"Breno de Sá","sponsor":"N/I","lider_tecnico":"Cleiton Dantas | Breno de Sá","gerente_projeto":"N/I","area_negocio":"Corporativo","Orçado Capex":null,"Orçado Opex":null,"Orçado Texto":"N/I","realizado":null,"realizado_texto":"N/I","eac":null,"data_inicio":null,"data_fim_baseline":null,"data_fim_atual":null,"fase_atual":"✅ Criação do Grupo de Trabalho PEC 221/19 com participação da TI | xx/202","atividades_executadas":"✅ Levantamento dos sistemas impactados (Escalas, Ponto, Folha, Dashboards, Integrações corporativas) | xx/202 | ✅ Identificação da necessidade de dashboard em tempo real para acompanhamento dos impactos operacionais e financeiros das escalas | xx/202 | ✅ Início das análises de automação, IA e RPA para suportar simulações e processos de gestão das jornadas | xx/202 | ✅ Avaliação dos impactos dos diferentes modelos de escala para Rio Quente e Costa do Sauípe | xx/202 | ✅ Levantamento das regras atuais de jornada, turnos e escalas existentes nos ambientes corporativos | xx/202","proximas_entregas":"🔄 Consolidar requisitos funcionais de escala, ponto e folha | Jul/2026. | 🔄 Construir dashboard executivo para análise dos modelos de jornada | Jul-Ago/2026 | ⚪️ Simular impactos financeiros das mudanças de escala | Ago/2026 | ⚪️ Avaliar soluções de mercado para gestão de escalas | Ago/2026 | ⚪️ Analisar integração entre sistemas (Escala, Ponto, Folha e BI) | Ago-Set/2026 | ⚪️ Definir arquitetura tecnológica alvo | Set/2026","cronograma_marco":"✅ Criação do Grupo de Trabalho PEC 221/19 com participação da TI | xx/202 | ✅ Mapeamento inicial das iniciativas tecnológicas necessárias para suportar novos modelos de escala | xx/202 | ✅ Formação do Grupo de Trabalho PEC 221/19 | Jun/2026 | ✅ Definição do projeto como prioridade máxima corporativa |Jun/2026 | ✅ Início do levantamento de requisitos | Jun/2026 | 🟡 Consolidação de requisitos regulatórios e operacionais | Jul/2026 | ⚪️ Dashboard executivo e simulador de escalas | Ago/2026 | ⚪️ Avaliação das soluções tecnológicas | Ago-Set/2026 | ⚪️ Definição do roadmap de implantação | Set/2026","risco1_severidade":"Alto","risco1_texto":"🔴 Impacto regulatório sobre escalas, folha e jornada de trabalho.","risco2_severidade":"Alto","risco2_texto":"🔴 Complexidade no cálculo do impacto financeiro das mudanças de escala.","risco3_severidade":"Alto","risco3_texto":"🔴 Ausência de cronograma executivo definido.","Resumo Executivo":"Projeto em 5% de evolução, com status Prioridade Máxima. Principais avanços: Levantamento dos sistemas impactados (Escalas, Ponto, Folha, Dashboards, Integrações corporativas). Próximo foco: Consolidar requisitos funcionais de escala, ponto e folha. Atenção: Impacto regulatório sobre escalas, folha e jornada de trabalho..","ultima_atualizacao":"2026-07-09","responsavel":"Wenderson"},{"id":"corp-031-teknisa-sauipe","nome_projeto":"CORP-031 · CPDA CDS - Implantação Teknisa","tier":1,"status":"Prioridade Máxima","objetivo":"Implantar Teknisa na unidade Sauípe com escopo e cronograma validados com negócio e fornecedor.","% de evolução":59,"% Planejado":62,"% tempo do projeto":62,"PMO do Projeto":"Anellisa Costa","Analista Direto":"Alímpio Cavalcante","sponsor":"Adriano Cossolino","lider_tecnico":"Wenderson Leal | Alímpio Cavalcante | Cleiton Dantas | Breno de Sá","gerente_projeto":"Anellisa Costa","area_negocio":"Corporativo","Orçado Capex":69680000,"Orçado Opex":null,"Orçado Texto":"69,68 MM","realizado":60270000,"realizado_texto":"60,27MM","eac":null,"data_inicio":null,"data_fim_baseline":null,"data_fim_atual":null,"fase_atual":"✅ Assessment Rio Quente | Abr/2026","atividades_executadas":"✅ Conclusão do Assessment do CPDA Rio Quente | Abr/2026. | ✅ Avaliação dos cenários de implantação Teknisa para Costa do Sauípe | Jun/2026 | ✅ Definição do cenário de implantação Teknisa | 03/07/2026 | ✅ Aprovação da nova implantação Teknisa com nova base corporativa | Jul/2026 | ✅ Definição da estratégia de árvore de produtos, cadastros e integrações | Jul/2026 | ✅ SCI dos transformadores e estruturas de TI em andamento | Jul/2026","proximas_entregas":"🟡 Kickoff oficial da implantação Teknisa | Jul/2026. | 🔄 Construção da nova base corporativa Teknisa| Ago/2026 | 🔄 Revisão e saneamento da árvore de produtos | Ago/2026 | ⚪️ Parametrização dos módulos (Compras, Estoque, Produção, Fiscal, Expedição) | Ago-Set/2026 | ⚪️ Implantação das integrações CM / Data Lake / Financeiro | Set-Out/2026. | ⚪️ Chegada dos equipamentos de TI | Out/2026. | ⚪️ Testes integrados | Out-Nov/2026 | ⚪️ Homologação dos usuários-chave | Nov/2026. | 🎯 Go Live | Dez/2026.","cronograma_marco":"✅ Assessment Rio Quente | Abr/2026 | ✅ Avaliação dos cenários | Jun/2026 | ✅ Aprovação Cenário 4.0 sem inovação | Jul/2026 | 🟡 Contrato e Kickoff Projeto | Jul/2026 | 🟡 Nova Base Corporativa | Jul-Ago/2026 | ⚪️ Parametrização dos módulos | Ago-Set/2026 | ⚪️ Integrações e testes. Set-Nov/2026 | ⚪️ Homologação. Nov/2026 | 🎯 Go Live Teknisa | Dez/2026 | 🎯 Operação CPDA Costa do Sauípe | Dez/2026","risco1_severidade":"Alto","risco1_texto":"🔴 Dependência da chegada dos equipamentos até 19/10.","risco2_severidade":"Médio","risco2_texto":"🟠 Integrações Teknisa × CM × Financeiro precisam estar completas antes do Go Live.","risco3_severidade":"Médio","risco3_texto":"🟠 Definição e dedicação dos Key Users.","Resumo Executivo":"Projeto em 59% de evolução versus 62% planejado, com status Prioridade Máxima. Principais avanços: Conclusão do Assessment do CPDA Rio Quente. Próximo foco: Kickoff oficial da implantação Teknisa. Atenção: Dependência da chegada dos equipamentos até 19/10..","ultima_atualizacao":"2026-07-09","responsavel":"Wenderson"},{"id":"corp-033-nonius","nome_projeto":"CORP-033 · Nonius","tier":2,"status":"Controle de Escopo","objetivo":"Controlar escopo e dependências do Nonius com PMS, infraestrutura e hospitalidade.","% de evolução":15,"% Planejado":null,"% tempo do projeto":null,"PMO do Projeto":"N/I","Analista Direto":"Wallace Silva","sponsor":"N/I","lider_tecnico":"Wenderson Leal | Wallace Silva","gerente_projeto":"N/I","area_negocio":"Corporativo","Orçado Capex":null,"Orçado Opex":60000,"Orçado Texto":"CapEx N/I; Opex R$ 60K","realizado":null,"realizado_texto":"N/I","eac":null,"data_inicio":null,"data_fim_baseline":null,"data_fim_atual":null,"fase_atual":"✅ Apresentação da solução Nonius | Out/2024","atividades_executadas":"✅ Avaliação e apresentação da solução Nonius para Aviva | Out/2024 | ✅ Comparativo técnico Nonius versus Vega IT | Mar/2025 | ✅ Avaliação comercial das propostas de TV Interativa | Jan-Mar/2025 | ✅ Avaliação da solução Cast Hospitality | Jan-Mar/2025 | ✅ Avaliação da solução IPTV Headend | Jan-Mar/2025 | ✅ Avaliação do Portal de Internet para hóspedes | Jan-Mar/2025 | ✅ Contrato corporativo Nonius formalizado | Out/2025 | ✅ Definição dos requisitos técnicos de rede | Out/2025","proximas_entregas":"🟡 Configuração da infraestrutura WLAN dedicada para Chromecast/Nonius Cast | TBD | 🟡 Configuração das VLANs necessárias para interoperabilidade da plataforma | TBD | 🟡 Implantação da TV Interativa nos apartamentos | TBD | 🟡 Implantação da solução Cast Hospitality | TBD. | 🟡 Implantação do Headend IPTV | TBD | 🟡 Integração PMS e experiência digital do hóspede | TBD","cronograma_marco":"✅ Apresentação da solução Nonius | Out/2024 | ✅ Recebimento das propostas comerciais | Jan/2025 | ✅ Comparativo técnico Nonius x Vega IT | Mar/2025 | ✅ Definição da arquitetura TV + Cast + IPTV | Ago/2025 | ✅ Contratação formal | Out/2025 | 🟡 Preparação da infraestrutura Wi-Fi e VLAN | TBD | 🟡 Implantação das TVs e Chromecast | TBD | 🟡 Testes integrados | TBD | 🎯 Go Live Validar | TBD","risco1_severidade":"Alto","risco1_texto":"🔴 Dependência da qualidade da cobertura Wi-Fi mínima de -65 dBm para funcionamento da plataforma Cast.","risco2_severidade":"Alto","risco2_texto":"🔴 Necessidade de WLAN exclusiva para Chromecast e componentes Nonius.","risco3_severidade":"Médio","risco3_texto":"🟠 Dependência de switches, VLANs e Access Points compatíveis.","Resumo Executivo":"Projeto em 15% de evolução, com status Controle de Escopo. Principais avanços: Avaliação e apresentação da solução Nonius para Aviva. Próximo foco: Configuração da infraestrutura WLAN dedicada para Chromecast/Nonius Cast. Atenção: Dependência da qualidade da cobertura Wi-Fi mínima de -65 dBm para funcionamento da plataforma Cast..","ultima_atualizacao":"2026-07-09","responsavel":"Wenderson"},{"id":"corp-032-gestao-acessos-cancelas","nome_projeto":"CORP-032 · Gestão de Acessos Corporativo","tier":1,"status":"Dentro do Esperado","objetivo":"Manter foco na implantação de gestão de acessos e cancelas por relevância operacional e segurança.","% de evolução":35,"% Planejado":null,"% tempo do projeto":null,"PMO do Projeto":"Fernando Dadamos | Geovanna Nogueira","Analista Direto":"Breno de Sá","sponsor":"Jorge Cordenonsi","lider_tecnico":"Breno de Sá","gerente_projeto":"Fernando Dadamos | Geovanna Nogueira","area_negocio":"Corporativo","Orçado Capex":null,"Orçado Opex":null,"Orçado Texto":"N/I","realizado":null,"realizado_texto":"N/I","eac":null,"data_inicio":null,"data_fim_baseline":null,"data_fim_atual":null,"fase_atual":"✅ Publicação da POL-36 | Jan/2025","atividades_executadas":"✅ Publicação da nova POL-36 Política de Gestão de Acessos e Perfis | Jan/2025. | ✅ Mapeamento dos acessos dos sistemas críticos | xx/202 | ✅ Revisão de perfis e eliminação de acessos indevidos | xx/202 | ✅ Implantação do processo formal de concessão e revogação de acessos | xx/202 | ✅ Definição da política de segregação de funções (SoD) | xx/202 | ✅ Criação da rotina periódica de revisão de acessos para auditoria | xx/202 | ✅ Regularização dos acessos de colaboradores desligados | Out/2024. | ✅ Implementação do processo de revisão periódica de acesso junto à Segurança da Informação | xx/202","proximas_entregas":"🔴 Desenhar processo corporativo de Gerenciamento de Identidades (IGA/IAM) | 3º trim/2026. | 🔄 Implantar ferramenta de IAM (Identity and Access Management) | 2º sem/2026. | 🔄 Automatizar revalidação de acessos de colaboradores transferidos | 2º sem/2026. | 🔄 Automatizar processo de revisão periódica dos sistemas críticos | 2º sem/2026. | ⚪️ Implantar trilha de auditoria e governança integrada para concessão, alteração e revogação | 4º trim/2026.","cronograma_marco":"✅ Publicação da POL-36 | Jan/2025 | ✅ Revisão dos acessos indevidos | 1º sem/2026 | ✅ Processo de concessão e revogação implantado | 1º sem/2026 | ✅ Processo de revisão periódica implantado | 1º sem/2026 | 🟡 Desenho do processo de Gerenciamento de Identidades | 3º trim/2026 | ⚪️ Seleção e implantação da ferramenta IAM | 2º sem/2026 | ⚪️ Integração dos sistemas críticos ao processo centralizado | 4º trim/2026 | 🎯 Operação completa e automatizada de Gestão de Acessos | 1º trim/2027","risco1_severidade":"Alto","risco1_texto":"🔴 Ausência de ferramenta corporativa IAM. Pode manter controles manuais e elevar riscos operacionais.","risco2_severidade":"Alto","risco2_texto":"🔴 Falta de revalidação automática dos acessos em movimentações internas. Risco apontado em auditoria.","risco3_severidade":"Alto","risco3_texto":"🔴 Ausência de processo automatizado para revisão periódica dos sistemas CM, Multivendas, Opera e TSE. Risco de conformidade e LGPD.","Resumo Executivo":"Projeto em 35% de evolução, com status Dentro do Esperado. Principais avanços: Publicação da nova POL-36 Política de Gestão de Acessos e Perfis. Próximo foco: Desenhar processo corporativo de Gerenciamento de Identidades (IGA/IAM). Atenção: Ausência de ferramenta corporativa IAM. Pode manter controles manuais e elevar riscos operacionais..","ultima_atualizacao":"2026-07-09","responsavel":"Wenderson"},{"id":"corp-034-baia-tartarugas","nome_projeto":"CORP-034 · Hot Park Baía das Tartarugas","tier":2,"status":"Abaixo do Esperado","objetivo":"Acompanhar projeto Baía das Tartarugas e entregas de tecnologia do empreendimento.","% de evolução":27,"% Planejado":42,"% tempo do projeto":42,"PMO do Projeto":"Rejane Cruz","Analista Direto":"João Silva","sponsor":"Alessandro Cunha","lider_tecnico":"Wenderson Leal | João Silva | Cleiton Dantas | Breno de Sá | Igor São Paulo","gerente_projeto":"Rejane Cruz","area_negocio":"Corporativo","Orçado Capex":422000000,"Orçado Opex":null,"Orçado Texto":"422MM","realizado":177000000,"realizado_texto":"177MM","eac":null,"data_inicio":null,"data_fim_baseline":null,"data_fim_atual":null,"fase_atual":"✅ Projeto executivo de sinalização | Jul/2026 ","atividades_executadas":"✅ Especificação dos componentes tecnológicos do empreendimento | Dez//2025 | ✅ Definição da estratégia de Garantia Financeira ProSlide – Draft da Carta de Crédito aprovado | Jul/2026 | ✅ Recebimento do projeto executivo de sinalização para início das cotações e validações | Jul/2026 | ✅ Estruturação dos requisitos da Jornada Digital do parque | Jun/2026","proximas_entregas":"🟡 Definição final sobre postergação dos embarques ProSlide | Jul/2026. | 🟡 Emissão definitiva da Carta de Crédito ProSlide | Após definição cronograma de embarques. | 🟡 Aprovação do Plano de Comunicação e Lançamento | 3º trimestre/2026. | 🟡 Evolução da Jornada Digital e detalhamento do Go To Market Digital | 3º trimestre/2026. | ⏳ Implantação dos ambientes de telecomunicações, Wi-Fi, RFID e sistemas operacionais | Durante a execução da obra | ⏳ Implantação das integrações entre App, acesso, consumo e operação | Fase pré-operaciona","cronograma_marco":"✅ Projeto executivo de sinalização | Jul/2026 | 🟡 Evolução Jornada Digital | 2º semestre/2026. | ⏳ Implantação dos sistemas tecnológicos do parque | Durante execução da obra. | ⏳ Testes integrados operacionais | Pré-Go Live. | 🎯 Inauguração Hot Park Baía das Tartarugas | Final da implantação do empreendimento.","risco1_severidade":"Alto","risco1_texto":"🔴 Jornada Digital Sem evolução reportada na última semana. Atrasos podem comprometer a preparação operacional do parque.","risco2_severidade":null,"risco2_texto":null,"risco3_severidade":null,"risco3_texto":null,"Resumo Executivo":"Projeto em 27% de evolução versus 42% planejado, com status Abaixo do Esperado. Principais avanços: Especificação dos componentes tecnológicos do empreendimento. Próximo foco: Definição final sobre postergação dos embarques ProSlide. Atenção: Jornada Digital Sem evolução reportada na última semana. Atrasos podem comprometer a preparação operacional do parque..","ultima_atualizacao":"2026-07-09","responsavel":"Wenderson"},{"id":"corp-035-passaporte-fundador","nome_projeto":"CORP-035 · Passaporte Fundador","tier":2,"status":"Dentro do Esperado","objetivo":"Acompanhar infraestrutura, controle de acesso e integrações do Passaporte Fundador.","% de evolução":30,"% Planejado":30,"% tempo do projeto":30,"PMO do Projeto":"Rejane Cruz","Analista Direto":"João Silva","sponsor":"Rubens Oliveira","lider_tecnico":"Wenderson Leal | João Silva","gerente_projeto":"Rejane Cruz","area_negocio":"Corporativo","Orçado Capex":10000000,"Orçado Opex":null,"Orçado Texto":"R$ 10,0 MM","realizado":760000,"realizado_texto":"0,76 MM","eac":null,"data_inicio":"2025-01-01","data_fim_baseline":"2027-07-31","data_fim_atual":"2027-07-31","fase_atual":"Processo de licitação da obra | Jun/2026","atividades_executadas":"✅ Levantamento da infraestrutura tecnológica necessária para operação do empreendimento| Jan/2025 | ✅ Definição da sala de TI e necessidades de conectividade da área Laguna | Jan/2025 | ✅ Definição dos requisitos para controle de acesso e reconhecimento facial do Passaporte |Jan/2025 | ✅ Elaboração das estimativas de custos de TI para composição do CAPEX da obra |Fev/2025 | ✅ Testes, homologações e validação operacional do Multiclubes para comercialização do Passaporte| Dez/2025 | ✅ Correção das falhas do link de pagamento do produto | Jun/2026 | ✅ Definição conjunta das soluções de infraestrutura com GEPI, Sustentabilidade e Projetos |Jun/2026 | ✅ Compatibilização dos projetos técnicos complementares | Mar/2026","proximas_entregas":"🔄 Conclusão da compatibilização dos projetos complementares | Depende da etapa de Engenharia | 🔄 Apoio à revisão orçamentária e adequação do CAPEX do projeto | Jul/2026 | 🔄 Definição final da arquitetura de infraestrutura tecnológica da operação Laguna | Jul/2026 | ⚪️ Implantação da infraestrutura de rede, telecom e ambiente operacional |Não iniciada | ⚪️ Implantação da solução de controle de acesso integrada ao Passaporte Fundador |Não iniciada","cronograma_marco":"Processo de licitação da obra | Jun/2026 | Revisão de escopo para adequação ao orçamento-alvo | Jul/2026 | Início das obras do Laguna | Jul/2026 | Implantação da infraestrutura tecnológica da operação | Durante execução da obra | Preparação operacional e integração de sistemas | Jul/2027 | Inauguração do empreendimento Laguna | Jul/2027","risco1_severidade":"Médio","risco1_texto":"🟠 Dependência da contratação e implantação das soluções tecnológicas críticas (RFID, App, conectividade, PDVs e integrações)","risco2_severidade":"Alto","risco2_texto":"🔴 Risco de impacto no cronograma caso ocorram atrasos na compatibilização dos projetos executivos e contratação dos fornecedores","risco3_severidade":null,"risco3_texto":null,"Resumo Executivo":"Projeto em 30% de evolução versus 30% planejado, com status Dentro do Esperado. Principais avanços: Levantamento da infraestrutura tecnológica necessária para operação do empreendimento. Próximo foco: Conclusão da compatibilização dos projetos complementares. Atenção: Dependência da contratação e implantação das soluções tecnológicas críticas (RFID, App, conectividade, PDVs e integrações).","ultima_atualizacao":"2026-07-09","responsavel":"Wenderson"}];
+
+/* ============ HELPERS ============ */
+function splitList(v){
+  if(v===null||v===undefined) return [];
+  return String(v).split('|').map(s=>s.trim()).filter(Boolean);
+}
+function num(v){
+  if(v===null||v===undefined||v==='') return null;
+  const n = typeof v === 'number' ? v : parseFloat(String(v).replace(',','.'));
+  return isNaN(n) ? null : n;
+}
+function fmtDate(s){
+  if(!s) return '—';
+  const d = new Date(s);
+  if(isNaN(d.getTime())) return s;
+  return d.toLocaleDateString('pt-BR',{day:'2-digit',month:'short',year:'numeric'});
+}
+function fmtMoney(v){
+  if(v===null||v===undefined||v==='') return '—';
+  const n = num(v);
+  if(n===null) return String(v);
+  return n.toLocaleString('pt-BR',{style:'currency',currency:'BRL',maximumFractionDigits:0});
+}
+function esc(s){
+  const d=document.createElement('div'); d.textContent = s ?? ''; return d.innerHTML;
+}
+function uniqSorted(arr){ return [...new Set(arr.filter(Boolean))].sort((a,b)=>a.localeCompare(b,'pt-BR')); }
+
+/* ============ NORMALIZE ============ */
+function normalizeRow(row){
+  const get = (k) => row[k];
+  const evolucao = num(get('% de evolução'));
+  const planejado = num(get('% Planejado'));
+  const riscos = [];
+  for(const i of [1,2,3]){
+    const sev = get('risco'+i+'_severidade');
+    const txt = get('risco'+i+'_texto');
+    if(sev || txt) riscos.push({severidade:(sev||'').trim(), texto:(txt||'').trim()});
+  }
+  const sm = statusMeta(get('status'));
+  return {
+    id: get('id'),
+    nome: get('nome_projeto') || get('id'),
+    tier: num(get('tier')) || 3,
+    statusRaw: (get('status')||'').trim(),
+    statusBucket: sm.bucket,
+    statusLabel: sm.label,
+    statusCls: sm.cls,
+    objetivo: get('objetivo') || '',
+    evolucao, planejado,
+    tempoPct: num(get('% tempo do projeto')),
+    pmoList: splitList(get('PMO do Projeto')),
+    analistaList: splitList(get('Analista Direto')),
+    sponsorList: splitList(get('sponsor')),
+    liderList: splitList(get('lider_tecnico')),
+    gerenteList: splitList(get('gerente_projeto')),
+    area: (get('area_negocio')||'Não classificado').trim(),
+    capex: num(get('Orçado Capex')),
+    opex: num(get('Orçado Opex')),
+    orcadoTexto: get('Orçado Texto') || '',
+    realizado: num(get('realizado')),
+    realizadoTexto: get('realizado_texto') || '',
+    eac: get('eac'),
+    dataInicio: get('data_inicio'),
+    dataFimBaseline: get('data_fim_baseline'),
+    dataFimAtual: get('data_fim_atual'),
+    fase: get('fase_atual') || '',
+    atividades: splitList(get('atividades_executadas')),
+    proximas: splitList(get('proximas_entregas')),
+    marcos: splitList(get('cronograma_marco')),
+    riscos,
+    resumo: get('Resumo Executivo') || '',
+    ultimaAtualizacao: get('ultima_atualizacao'),
+    responsavel: get('responsavel') || '',
+    atrasado: (evolucao!==null && planejado!==null && evolucao < planejado)
+  };
+}
+
+/* ============ DATA LOADING ============ */
+function loadData(){
+  document.getElementById('loadingState').style.display = 'flex';
+  document.getElementById('views').style.display = 'none';
+
+  if(CONFIG.SHEET_CSV_URL && CONFIG.SHEET_CSV_URL.trim()){
+    // cache-buster: garante que "Atualizar agora" e o load inicial sempre peguem a versão mais recente
+    // publicada no Google Sheets, e não uma cópia em cache do navegador/CDN.
+    const bustUrl = CONFIG.SHEET_CSV_URL.trim() + (CONFIG.SHEET_CSV_URL.includes('?') ? '&' : '?') + 'cb=' + Date.now();
+    Papa.parse(bustUrl, {
+      download: true, header: true, skipEmptyLines: true,
+      complete: (res) => {
+        try{
+          const rows = res.data.filter(r => r.id && String(r.id).trim());
+          RAW = rows.map(normalizeRow);
+          onDataReady();
+        }catch(e){ console.error(e); RAW = SEED_DATA.map(normalizeRow); onDataReady(true); }
+      },
+      error: () => { RAW = SEED_DATA.map(normalizeRow); onDataReady(true); }
+    });
+  } else {
+    RAW = SEED_DATA.map(normalizeRow);
+    onDataReady(true);
+  }
+}
+
+function onDataReady(usedFallback){
+  document.getElementById('loadingState').style.display = 'none';
+  document.getElementById('views').style.display = 'block';
+  const now = new Date();
+  document.getElementById('lastUpdateLabel').textContent =
+    (usedFallback ? 'Dados de exemplo · ' : 'Atualizado ') + now.toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
+  populateFilterOptions();
+  applyFilters();
+  renderAll();
+}
+
+/* ============ FILTERS ============ */
+function populateFilterOptions(){
+  const statuses = uniqSorted(RAW.map(p=>p.statusLabel));
+  const tiers = uniqSorted(RAW.map(p=>'Tier '+p.tier));
+  const areas = uniqSorted(RAW.map(p=>p.area));
+  const gerentes = uniqSorted(RAW.flatMap(p=>p.gerenteList));
+  const analistas = uniqSorted(RAW.flatMap(p=>p.analistaList));
+  const pmos = uniqSorted(RAW.flatMap(p=>p.pmoList));
+  const sponsors = uniqSorted(RAW.flatMap(p=>p.sponsorList));
+
+  fillSelect('fStatus','Status: todos', statuses);
+  fillSelect('fTier','Tier: todos', [1,2,3].map(t=>'Tier '+t));
+  fillSelect('fArea','Área: todas', areas);
+  fillSelect('fGerente','Gerente: todos', gerentes);
+  fillSelect('fAnalista','Analista: todos', analistas);
+  fillSelect('fPmo','PMO: todos', pmos);
+  fillSelect('fSponsor','Sponsor: todos', sponsors);
+}
+function fillSelect(id, placeholder, options){
+  const el = document.getElementById(id);
+  el.innerHTML = '<option value="">'+placeholder+'</option>' + options.map(o=>'<option value="'+esc(o)+'">'+esc(o)+'</option>').join('');
+}
+
+function applyFilters(){
+  const f = STATE.filters;
+  FILTERED = RAW.filter(p=>{
+    if(f.status && p.statusLabel !== f.status) return false;
+    if(f.tier && ('Tier '+p.tier) !== f.tier) return false;
+    if(f.area && p.area !== f.area) return false;
+    if(f.gerente && !p.gerenteList.includes(f.gerente)) return false;
+    if(f.analista && !p.analistaList.includes(f.analista)) return false;
+    if(f.pmo && !p.pmoList.includes(f.pmo)) return false;
+    if(f.sponsor && !p.sponsorList.includes(f.sponsor)) return false;
+    if(f.q){
+      const hay = [p.nome,p.id,p.area,...p.sponsorList,...p.gerenteList,...p.analistaList,...p.pmoList].join(' ').toLowerCase();
+      if(!hay.includes(f.q.toLowerCase())) return false;
+    }
+    return true;
+  });
+}
+
+/* ============ ROUTING ============ */
+const ROUTE_META = {
+  home:        {title:'Home', sub:'Visão executiva do portfólio de tecnologia'},
+  projetos:    {title:'Projetos', sub:'Todos os projetos da carteira DETI/GETI'},
+  capacidade:  {title:'Capacidade dos Analistas', sub:'Alocação e carga de trabalho por analista'},
+  gerente:     {title:'Visão por Gerente', sub:'Projetos agrupados por gerente responsável'},
+  pmo:         {title:'Visão por PMO', sub:'Projetos agrupados por PMO'},
+  indicadores: {title:'Indicadores', sub:'Panorama gráfico do portfólio'},
+  riscos:      {title:'Riscos & Pontos de Atenção', sub:'Riscos ativos e impedimentos reportados'}
+};
+function goTo(route){
+  STATE.route = route;
+  document.querySelectorAll('.nav-item').forEach(b=>b.classList.toggle('active', b.dataset.route===route));
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById('view-'+route).classList.add('active');
+  document.getElementById('viewTitle').textContent = ROUTE_META[route].title;
+  document.getElementById('viewSubtitle').textContent = ROUTE_META[route].sub;
+  document.getElementById('filterBar').style.display = (route==='home') ? 'none' : 'flex';
+  closeSidebarMobile();
+  renderView(route);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function renderAll(){ renderView(STATE.route); renderRagMini(); }
+function renderView(route){
+  if(route==='home') renderHome();
+  else if(route==='projetos') renderProjetos();
+  else if(route==='capacidade') renderCapacidade();
+  else if(route==='gerente') renderOwnerView('gerente');
+  else if(route==='pmo') renderOwnerView('pmo');
+  else if(route==='indicadores') renderIndicadores();
+  else if(route==='riscos') renderRiscos();
+}
+
+/* ============ RAG MINI (sidebar) ============ */
+function renderRagMini(){
+  const c = {critico:0, atencao:0, prazo:0};
+  RAW.forEach(p=>c[p.statusBucket]++);
+  const total = RAW.length || 1;
+  const el = document.getElementById('ragMini');
+  el.innerHTML = ['critico','atencao','prazo'].map(k=>{
+    const pct = (c[k]/total*100).toFixed(0);
+    const color = k==='critico' ? 'var(--red)' : k==='atencao' ? 'var(--amber)' : 'var(--green)';
+    return '<span style="width:'+pct+'%;background:'+color+'"></span>';
+  }).join('');
+}
+
+/* ============ HOME VIEW ============ */
+function renderHome(){
+  const total = RAW.length;
+  const c = {critico:0, atencao:0, prazo:0};
+  RAW.forEach(p=>c[p.statusBucket]++);
+  const withEvo = RAW.filter(p=>p.evolucao!==null);
+  const avgEvo = withEvo.length ? (withEvo.reduce((s,p)=>s+p.evolucao,0)/withEvo.length) : 0;
+  const withPlan = RAW.filter(p=>p.planejado!==null);
+  const avgPlan = withPlan.length ? (withPlan.reduce((s,p)=>s+p.planejado,0)/withPlan.length) : 0;
+  const gerentesCount = uniqSorted(RAW.flatMap(p=>p.gerenteList)).length;
+  const analistasCount = uniqSorted(RAW.flatMap(p=>p.analistaList)).length;
+  const pmoCount = uniqSorted(RAW.flatMap(p=>p.pmoList)).length;
+
+  const kpis = [
+    {label:'Total de projetos', value:total, sub:'carteira ativa', cls:''},
+    {label:'Críticos', value:c.critico, sub:BUCKET_LABEL.critico, cls:'k-red'},
+    {label:'Em atenção', value:c.atencao, sub:BUCKET_LABEL.atencao, cls:'k-amber'},
+    {label:'No prazo', value:c.prazo, sub:BUCKET_LABEL.prazo, cls:'k-green'},
+    {label:'Evolução média', value:avgEvo.toFixed(0)+'%', sub:'realizado', cls:''},
+    {label:'Planejado médio', value:avgPlan.toFixed(0)+'%', sub:'baseline', cls:''},
+    {label:'Gerentes', value:gerentesCount, sub:'responsáveis', cls:''},
+    {label:'Analistas', value:analistasCount, sub:'em execução', cls:''},
+    {label:'PMOs', value:pmoCount, sub:'acompanhando', cls:''},
+  ];
+
+  const riscoOrdenado = [...RAW].filter(p=>p.statusBucket==='critico' || p.atrasado)
+    .sort((a,b)=>(a.evolucao-a.planejado||0)-(b.evolucao-b.planejado||0)).slice(0,5);
+  const avancoOrdenado = [...RAW].filter(p=>p.evolucao!==null).sort((a,b)=>b.evolucao-a.evolucao).slice(0,5);
+  const atrasados = RAW.filter(p=>p.atrasado).sort((a,b)=>(a.evolucao-a.planejado)-(b.evolucao-b.planejado)).slice(0,6);
+  const proximosPassos = RAW.filter(p=>p.proximas.length).slice(0,6);
+  const sponsorsAtivos = uniqSorted(RAW.flatMap(p=>p.sponsorList)).slice(0,8);
+
+  const html = `
+    <div class="section-head"><h2>Indicadores principais</h2><span class="section-note">${total} projetos monitorados</span></div>
+    <div class="kpi-grid">
+      ${kpis.map(k=>`<div class="kpi-card ${k.cls}"><div class="kpi-label">${esc(k.label)}</div><div class="kpi-value">${k.value}</div><div class="kpi-sub">${esc(k.sub)}</div></div>`).join('')}
+    </div>
+
+    <div class="section-head"><h2>Distribuição de status (RAG)</h2></div>
+    <div class="rag-strip-wrap">
+      <div class="rag-strip-top"><h3>Composição do portfólio</h3><span>${total} projetos</span></div>
+      <div class="rag-strip">
+        ${['critico','atencao','prazo'].map(k=>{
+          const pct = total ? (c[k]/total*100) : 0;
+          if(pct<=0) return '';
+          const color = k==='critico'?'var(--red)':k==='atencao'?'var(--amber)':'var(--green)';
+          return `<div class="rag-seg" style="width:${pct}%;background:${color}" title="${BUCKET_LABEL[k]}: ${c[k]}">${pct>=8?pct.toFixed(0)+'%':''}</div>`;
+        }).join('')}
+      </div>
+      <div class="rag-legend">
+        ${['critico','atencao','prazo'].map(k=>{
+          const color = k==='critico'?'var(--red)':k==='atencao'?'var(--amber)':'var(--green)';
+          return `<div class="rag-legend-item"><span class="dot" style="background:${color}"></span>${BUCKET_LABEL[k]} · ${c[k]}</div>`;
+        }).join('')}
+      </div>
+    </div>
+
+    <div class="section-head"><h2>Resumo executivo</h2></div>
+    <div class="grid-auto">
+      <div class="exec-card">
+        <h3>🔴 Maior risco</h3>
+        <ul class="exec-list">
+          ${riscoOrdenado.length ? riscoOrdenado.map(p=>execRow(p, p.statusLabel, p.statusCls)).join('') : '<li>Nenhum projeto crítico ou atrasado no momento.</li>'}
+        </ul>
+      </div>
+      <div class="exec-card">
+        <h3>📈 Maior avanço</h3>
+        <ul class="exec-list">
+          ${avancoOrdenado.map(p=>execRow(p, (p.evolucao??'—')+'%', 'green')).join('')}
+        </ul>
+      </div>
+      <div class="exec-card">
+        <h3>⚠️ Atrasados vs. planejado</h3>
+        <ul class="exec-list">
+          ${atrasados.length ? atrasados.map(p=>execRow(p, (p.evolucao-p.planejado)+' pp', 'red')).join('') : '<li>Nenhum projeto com evolução abaixo do planejado.</li>'}
+        </ul>
+      </div>
+      <div class="exec-card">
+        <h3>➡️ Próximos passos</h3>
+        <ul class="exec-list">
+          ${proximosPassos.map(p=>`<li data-open="${esc(p.id)}"><span class="el-name">${esc(p.nome)}</span><span class="el-meta">${esc((p.proximas[0]||'').slice(0,42))}</span></li>`).join('')}
+        </ul>
+      </div>
+      <div class="exec-card" style="grid-column:1/-1">
+        <h3>👤 Principais sponsors envolvidos</h3>
+        <div style="display:flex;flex-wrap:wrap;gap:8px">
+          ${sponsorsAtivos.map(s=>`<span class="mini-tag" data-filter-sponsor="${esc(s)}">${esc(s)}</span>`).join('')}
+        </div>
+      </div>
+    </div>
+  `;
+  document.getElementById('view-home').innerHTML = html;
+}
+function execRow(p, right, cls){
+  return `<li data-open="${esc(p.id)}"><span class="el-name">${esc(p.nome)}</span><span class="badge badge-${cls}">${esc(String(right))}</span></li>`;
+}
+
+/* ============ PROJETOS VIEW ============ */
+function renderProjetos(){
+  const list = FILTERED;
+  const html = `
+    <div class="section-head"><h2>Projetos (${list.length})</h2><span class="section-note">clique em um card para abrir o one page</span></div>
+    <div class="cards-grid">
+      ${list.map(projectCard).join('') || '<div class="empty-state">Nenhum projeto encontrado com os filtros atuais.</div>'}
+    </div>
+  `;
+  document.getElementById('view-projetos').innerHTML = html;
+}
+function projectCard(p){
+  const evo = p.evolucao ?? 0, plan = p.planejado;
+  return `
+  <div class="pcard" data-open="${esc(p.id)}">
+    <div class="pcard-top">
+      <div>
+        <div class="pcard-code">${esc(p.id)}</div>
+        <div class="pcard-title">${esc(p.nome)}</div>
+      </div>
+      <div class="pcard-tier">Tier ${p.tier}</div>
+    </div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap">
+      <span class="badge badge-${p.statusCls}">${esc(p.statusLabel)}</span>
+      ${p.atrasado ? '<span class="badge badge-red">⚠ Abaixo do planejado</span>' : ''}
+    </div>
+    <div class="pcard-meta">
+      <div>Área<br><b>${esc(p.area)}</b></div>
+      <div>Gerente<br><b>${esc(p.gerenteList.join(', ')||'N/I')}</b></div>
+      <div>Analista<br><b>${esc(p.analistaList.join(', ')||'N/I')}</b></div>
+      <div>PMO<br><b>${esc(p.pmoList.join(', ')||'N/I')}</b></div>
+      <div>Sponsor<br><b>${esc(p.sponsorList.join(', ')||'N/I')}</b></div>
+      <div>Atualizado<br><b>${fmtDate(p.ultimaAtualizacao)}</b></div>
+    </div>
+    <div class="pcard-bars">
+      <div class="bar-row"><span class="bar-label">Evolução</span><div class="bar-track"><div class="bar-fill evo" style="width:${Math.min(evo,100)}%"></div></div><span class="bar-pct">${p.evolucao??'—'}%</span></div>
+      ${plan!==null ? `<div class="bar-row"><span class="bar-label">Planejado</span><div class="bar-track"><div class="bar-fill plan" style="width:${Math.min(plan,100)}%"></div></div><span class="bar-pct">${plan}%</span></div>` : ''}
+    </div>
+    ${p.proximas.length ? `<div class="pcard-next"><b>Próxima ação:</b> ${esc(p.proximas[0])}</div>` : ''}
+  </div>`;
+}
+
+/* ============ CAPACIDADE VIEW ============ */
+function computeCapacity(){
+  const map = {};
+  RAW.forEach(p=>{
+    p.analistaList.forEach(a=>{
+      if(!map[a]) map[a] = {nome:a, projetos:[], weight:0, criticos:0, atencao:0};
+      map[a].projetos.push(p);
+      map[a].weight += CONFIG.CAPACITY_WEIGHTS[p.tier] || 1;
+      if(p.statusBucket==='critico') map[a].criticos++;
+      if(p.statusBucket==='atencao') map[a].atencao++;
+    });
+  });
+  return Object.values(map).map(a=>{
+    const pct = Math.round((a.weight / CONFIG.CAPACITY_TARGET) * 100);
+    let level = 'green';
+    if(pct>90) level='red'; else if(pct>=71) level='amber';
+    return {...a, pct, level};
+  }).sort((a,b)=>b.pct-a.pct);
+}
+function renderCapacidade(){
+  const analysts = computeCapacity();
+  const html = `
+    <div class="section-head">
+      <h2>Capacidade dos Analistas</h2>
+      <span class="section-note">índice de carga estimado por peso de tier (1=semanal·peso 3, 2=quinzenal·peso 2, 3=mensal·peso 1) sobre meta de ${CONFIG.CAPACITY_TARGET} pontos = 100%</span>
+    </div>
+    <div class="grid-auto">
+      ${analysts.map(a=>`
+        <div class="analyst-card" data-open-analista="${esc(a.nome)}">
+          <div class="analyst-top">
+            <span class="analyst-name">${esc(a.nome)}</span>
+            <span class="analyst-pct" style="color:var(--${a.level})">${a.pct}%</span>
+          </div>
+          <div class="cap-track"><div class="cap-fill" style="width:${Math.min(a.pct,100)}%;background:var(--${a.level})"></div></div>
+          <div class="analyst-stats">
+            <span><b>${a.projetos.length}</b> projetos</span>
+            <span><b>${a.criticos}</b> críticos</span>
+            <span><b>${a.atencao}</b> em atenção</span>
+          </div>
+          <div class="analyst-projects">
+            ${a.projetos.map(p=>`<span class="mini-tag">${esc(p.id)}</span>`).join('')}
+          </div>
+        </div>
+      `).join('') || '<div class="empty-state">Nenhum analista identificado nos dados.</div>'}
+    </div>
+  `;
+  document.getElementById('view-capacidade').innerHTML = html;
+}
+
+/* ============ GERENTE / PMO VIEW ============ */
+function renderOwnerView(kind){
+  const key = kind==='gerente' ? 'gerenteList' : 'pmoList';
+  const map = {};
+  RAW.forEach(p=>{
+    p[key].forEach(name=>{
+      if(!map[name]) map[name] = [];
+      map[name].push(p);
+    });
+  });
+  const names = Object.keys(map).sort((a,b)=>map[b].length-map[a].length);
+  const html = names.map(name=>{
+    const rows = map[name];
+    const crit = rows.filter(p=>p.statusBucket==='critico').length;
+    return `
+      <div class="owner-block">
+        <div class="owner-header">
+          <h3>${esc(name)}</h3>
+          <span class="owner-count">${rows.length} projetos ${crit? '· <span style="color:var(--red)">'+crit+' críticos</span>':''}</span>
+        </div>
+        <table class="data-table">
+          <thead><tr><th>Projeto</th><th>Área</th><th>Status</th><th>Evolução</th><th>Planejado</th><th>Próxima ação</th></tr></thead>
+          <tbody>
+            ${rows.map(p=>`
+              <tr class="tbl-row" data-open="${esc(p.id)}">
+                <td>${esc(p.nome)}</td>
+                <td>${esc(p.area)}</td>
+                <td><span class="badge badge-${p.statusCls}">${esc(p.statusLabel)}</span></td>
+                <td>${p.evolucao??'—'}%</td>
+                <td>${p.planejado??'—'}%</td>
+                <td>${esc((p.proximas[0]||'—').slice(0,50))}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>
+    `;
+  }).join('') || '<div class="empty-state">Sem dados.</div>';
+  document.getElementById('view-'+kind).innerHTML = `<div class="section-head"><h2>${kind==='gerente'?'Projetos por Gerente':'Projetos por PMO'}</h2></div>` + html;
+}
+
+/* ============ INDICADORES VIEW ============ */
+function renderIndicadores(){
+  document.getElementById('view-indicadores').innerHTML = `
+    <div class="section-head"><h2>Indicadores executivos</h2></div>
+    <div class="charts-grid">
+      <div class="chart-card"><h3>Projetos por status</h3><canvas id="chStatus"></canvas></div>
+      <div class="chart-card"><h3>Projetos por área</h3><canvas id="chArea"></canvas></div>
+      <div class="chart-card"><h3>Projetos por gerente</h3><canvas id="chGerente"></canvas></div>
+      <div class="chart-card"><h3>Projetos por analista</h3><canvas id="chAnalista"></canvas></div>
+      <div class="chart-card"><h3>Projetos por PMO</h3><canvas id="chPmo"></canvas></div>
+      <div class="chart-card"><h3>Evolução vs. planejado (top 12 maior desvio)</h3><canvas id="chEvoPlan"></canvas></div>
+      <div class="chart-card"><h3>Capacidade dos analistas</h3><canvas id="chCapacidade"></canvas></div>
+      <div class="chart-card"><h3>Projetos críticos por área</h3><canvas id="chCriticoArea"></canvas></div>
+    </div>
+  `;
+  buildCharts();
+}
+function destroyChart(id){ if(CHARTS[id]){ CHARTS[id].destroy(); delete CHARTS[id]; } }
+function countBy(arr, fn){
+  const m = {};
+  arr.forEach(item=>{
+    const keys = fn(item);
+    (Array.isArray(keys)?keys:[keys]).forEach(k=>{
+      if(!k) return;
+      m[k] = (m[k]||0)+1;
+    });
+  });
+  return m;
+}
+const PALETTE = ['#2f6fed','#1f9d63','#dd8f1f','#d9364a','#7c5cd6','#0b8f9f','#c4587c','#4c8bf5'];
+function buildCharts(){
+  if(typeof Chart === 'undefined'){ return; }
+  Chart.defaults.font.family = "'Inter',sans-serif";
+  Chart.defaults.color = '#5b6472';
+
+  destroyChart('chStatus');
+  const statusCounts = countBy(RAW, p=>p.statusLabel);
+  CHARTS.chStatus = new Chart(document.getElementById('chStatus'), {
+    type:'doughnut',
+    data:{ labels:Object.keys(statusCounts), datasets:[{data:Object.values(statusCounts), backgroundColor:PALETTE, borderWidth:2, borderColor:'#fff'}]},
+    options:{plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:10.5}}}}}
+  });
+
+  function hbar(id, counts, color){
+    destroyChart(id);
+    const entries = Object.entries(counts).sort((a,b)=>b[1]-a[1]);
+    CHARTS[id] = new Chart(document.getElementById(id), {
+      type:'bar',
+      data:{labels:entries.map(e=>e[0]), datasets:[{data:entries.map(e=>e[1]), backgroundColor:color, borderRadius:5}]},
+      options:{indexAxis:'y', plugins:{legend:{display:false}}, scales:{x:{ticks:{precision:0}}}}
+    });
+  }
+  hbar('chArea', countBy(RAW, p=>p.area), '#2f6fed');
+  hbar('chGerente', countBy(RAW, p=>p.gerenteList), '#1f9d63');
+  hbar('chAnalista', countBy(RAW, p=>p.analistaList), '#dd8f1f');
+  hbar('chPmo', countBy(RAW, p=>p.pmoList), '#7c5cd6');
+
+  destroyChart('chEvoPlan');
+  const withGap = RAW.filter(p=>p.evolucao!==null && p.planejado!==null)
+    .map(p=>({...p, gap: p.evolucao - p.planejado}))
+    .sort((a,b)=>a.gap-b.gap).slice(0,12);
+  CHARTS.chEvoPlan = new Chart(document.getElementById('chEvoPlan'), {
+    type:'bar',
+    data:{ labels: withGap.map(p=>p.id),
+      datasets:[
+        {label:'Evolução', data:withGap.map(p=>p.evolucao), backgroundColor:'#2f6fed', borderRadius:4},
+        {label:'Planejado', data:withGap.map(p=>p.planejado), backgroundColor:'#c7cedb', borderRadius:4}
+      ]},
+    options:{plugins:{legend:{position:'bottom'}}, scales:{x:{ticks:{font:{size:9}}}}}
+  });
+
+  destroyChart('chCapacidade');
+  const analysts = computeCapacity();
+  CHARTS.chCapacidade = new Chart(document.getElementById('chCapacidade'), {
+    type:'bar',
+    data:{labels:analysts.map(a=>a.nome), datasets:[{data:analysts.map(a=>a.pct), backgroundColor:analysts.map(a=>a.level==='red'?'#d9364a':a.level==='amber'?'#dd8f1f':'#1f9d63'), borderRadius:5}]},
+    options:{indexAxis:'y', plugins:{legend:{display:false}}, scales:{x:{ticks:{callback:v=>v+'%'}}}}
+  });
+
+  destroyChart('chCriticoArea');
+  const criticoArea = countBy(RAW.filter(p=>p.statusBucket==='critico'), p=>p.area);
+  CHARTS.chCriticoArea = new Chart(document.getElementById('chCriticoArea'), {
+    type:'bar',
+    data:{labels:Object.keys(criticoArea), datasets:[{data:Object.values(criticoArea), backgroundColor:'#d9364a', borderRadius:5}]},
+    options:{plugins:{legend:{display:false}}, scales:{y:{ticks:{precision:0}}}}
+  });
+}
+
+/* ============ RISCOS VIEW ============ */
+function renderRiscos(){
+  const items = [];
+  RAW.forEach(p=>{
+    p.riscos.forEach(r=>{
+      if(r.texto) items.push({p, ...r});
+    });
+    if(p.atrasado){
+      items.push({p, severidade:'Alto', texto:'Evolução ('+p.evolucao+'%) abaixo do planejado ('+p.planejado+'%).', synthetic:true});
+    }
+  });
+  const order = {'Alto':0,'Médio':1,'Baixo':2};
+  items.sort((a,b)=>(order[a.severidade]??1)-(order[b.severidade]??1));
+  const html = `
+    <div class="section-head"><h2>Riscos & Pontos de Atenção (${items.length})</h2></div>
+    ${items.map(it=>{
+      const sevCls = it.severidade==='Alto'?'sev-alto':it.severidade==='Baixo'?'sev-baixo':'sev-medio';
+      return `<div class="risk-item ${sevCls}" data-open="${esc(it.p.id)}">
+        <div class="risk-item-top"><strong>${esc(it.p.nome)}</strong><span class="badge badge-${it.severidade==='Alto'?'red':it.severidade==='Baixo'?'green':'amber'}">${esc(it.severidade||'N/I')}</span></div>
+        <p>${esc(it.texto)}</p>
+      </div>`;
+    }).join('') || '<div class="empty-state">Nenhum risco reportado.</div>'}
+  `;
+  document.getElementById('view-riscos').innerHTML = html;
+}
+
+/* ============ ONE PAGE MODAL ============ */
+function openProject(id){
+  const p = RAW.find(x=>x.id===id);
+  if(!p) return;
+  const barColor = p.statusCls==='red' ? 'var(--red)' : p.statusCls==='amber' ? 'var(--amber)' : 'var(--green)';
+  const evo = p.evolucao ?? 0;
+  const plan = p.planejado;
+
+  const teamFields = [
+    ['Sponsor', p.sponsorList.join(', ')],
+    ['Líder técnico', p.liderList.join(', ')],
+    ['Gerente do projeto', p.gerenteList.join(', ')],
+    ['PMO', p.pmoList.join(', ')],
+    ['Analista responsável', p.analistaList.join(', ')],
+    ['Área de negócio', p.area],
+  ].filter(([,v])=>v);
+
+  const html = `
+    <div class="op-header">
+      <div class="op-header-top">
+        <div>
+          <div class="op-code">${esc(p.id)}</div>
+          <div class="op-title">${esc(p.nome)}</div>
+          ${p.objetivo ? `<div class="op-objetivo">Objetivo: ${esc(p.objetivo)}</div>` : ''}
+        </div>
+        <button class="op-close" id="opClose">✕</button>
+      </div>
+      <div class="op-badges-row">
+        <div class="op-badges" style="margin-top:0">
+          <span class="badge badge-${p.statusCls}">${esc(p.statusLabel)}</span>
+          <span class="badge badge-neutral">Tier ${p.tier}</span>
+          ${p.atrasado?'<span class="badge badge-red">⚠ Abaixo do planejado</span>':''}
+        </div>
+        <div class="op-updated">Atualizado em ${fmtDate(p.ultimaAtualizacao)}${p.responsavel?' por '+esc(p.responsavel):''}</div>
+      </div>
+    </div>
+    <div class="op-body">
+
+      <div class="op-progress-block">
+        <div class="op-progress-top">
+          <span class="lbl">Avanço físico</span>
+          <span class="val" style="color:${barColor}">${p.evolucao??'—'}%</span>
+        </div>
+        <div class="op-progress-track">
+          <div class="op-progress-fill" style="width:${Math.min(evo,100)}%;background:${barColor}"></div>
+          ${plan!==null ? `<div class="op-progress-marker" style="left:${Math.min(plan,100)}%"></div>` : ''}
+        </div>
+        ${plan!==null ? `<div class="op-progress-sub"><span class="marker-dot"></span> Planejado: ${plan}%${p.atrasado?' · <span style="color:var(--red);font-weight:700">'+(evo-plan)+' pp abaixo do plano</span>':''}</div>` : ''}
+      </div>
+
+      ${p.resumo ? `<div class="op-resumo">${esc(p.resumo)}</div>` : ''}
+
+      ${teamFields.length ? `
+      <div class="op-team-grid">
+        ${teamFields.map(([lbl,val])=>`<div class="op-team-card"><div class="lbl">${esc(lbl)}</div><div class="val">${esc(val)}</div></div>`).join('')}
+      </div>` : ''}
+
+      <div class="op-two">
+        <div class="op-kv-card">
+          <h4>Financeiro</h4>
+          <div class="op-kv-row"><span class="k">Orçado CAPEX</span><span class="v">${fmtMoney(p.capex)}</span></div>
+          <div class="op-kv-row"><span class="k">Orçado OPEX</span><span class="v">${fmtMoney(p.opex)}</span></div>
+          <div class="op-kv-row"><span class="k">Realizado</span><span class="v">${p.realizadoTexto || fmtMoney(p.realizado)}</span></div>
+          ${p.eac ? `<div class="op-kv-row"><span class="k">Projeção final (EAC)</span><span class="v">${esc(String(p.eac))}</span></div>` : ''}
+        </div>
+        <div class="op-kv-card">
+          <h4>Cronograma macro</h4>
+          <div class="op-kv-row"><span class="k">Início</span><span class="v">${fmtDate(p.dataInicio)}</span></div>
+          <div class="op-kv-row"><span class="k">Fim previsto (baseline)</span><span class="v">${fmtDate(p.dataFimBaseline)}</span></div>
+          <div class="op-kv-row"><span class="k">Fim projetado (atual)</span><span class="v">${fmtDate(p.dataFimAtual)}</span></div>
+          <div class="op-kv-row"><span class="k">Fase atual</span><span class="v" style="font-family:var(--font-body);text-align:right">${esc(p.fase||'—')}</span></div>
+          ${p.marcos.length ? `<div class="op-kv-sub"><span class="lbl2">Marcos</span><ul class="op-list">${p.marcos.map(m=>`<li>${esc(m)}</li>`).join('')}</ul></div>` : ''}
+        </div>
+      </div>
+
+      <div class="op-two">
+        <div class="op-section">
+          <h4>Executado no período</h4>
+          <ul class="op-list">${p.atividades.length ? p.atividades.map(a=>`<li>${esc(a)}</li>`).join('') : '<li>Nenhuma cadastrada.</li>'}</ul>
+        </div>
+        <div class="op-section">
+          <h4>Próximas entregas</h4>
+          <ul class="op-list">${p.proximas.length ? p.proximas.map(a=>`<li>${esc(a)}</li>`).join('') : '<li>Nenhuma cadastrada.</li>'}</ul>
+        </div>
+      </div>
+
+      <div class="op-section" style="margin-bottom:0">
+        <h4>Riscos e dependências</h4>
+        ${p.riscos.length ? p.riscos.map(r=>`<div class="op-risk"><span class="badge badge-${r.severidade==='Alto'?'red':r.severidade==='Baixo'?'green':'amber'}">${esc(r.severidade||'N/I')}</span> ${esc(r.texto)}</div>`).join('') : '<p style="font-size:12.5px;color:var(--text-muted)">Nenhum risco reportado.</p>'}
+      </div>
+    </div>
+  `;
+  document.getElementById('modalContent').innerHTML = html;
+  document.getElementById('modalOverlay').classList.add('open');
+  document.getElementById('opClose').addEventListener('click', closeModal);
+}
+function closeModal(){ document.getElementById('modalOverlay').classList.remove('open'); }
+
+/* ============ SIDEBAR MOBILE ============ */
+function closeSidebarMobile(){
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebarScrim').classList.remove('open');
+}
+
+/* ============ EVENTS ============ */
+document.addEventListener('DOMContentLoaded', () => {
+  loadData();
+
+  document.getElementById('mainNav').addEventListener('click', (e)=>{
+    const btn = e.target.closest('.nav-item');
+    if(btn) goTo(btn.dataset.route);
+  });
+
+  document.getElementById('refreshBtn').addEventListener('click', ()=>{
+    document.getElementById('refreshIcon').classList.add('loading');
+    loadData();
+    setTimeout(()=>document.getElementById('refreshIcon').classList.remove('loading'), 600);
+  });
+
+  document.getElementById('hamburger').addEventListener('click', ()=>{
+    document.getElementById('sidebar').classList.toggle('open');
+    document.getElementById('sidebarScrim').classList.toggle('open');
+  });
+  document.getElementById('sidebarScrim').addEventListener('click', closeSidebarMobile);
+
+  ['fStatus','fTier','fArea','fGerente','fAnalista','fPmo','fSponsor'].forEach(id=>{
+    document.getElementById(id).addEventListener('change', (e)=>{
+      const map = {fStatus:'status',fTier:'tier',fArea:'area',fGerente:'gerente',fAnalista:'analista',fPmo:'pmo',fSponsor:'sponsor'};
+      STATE.filters[map[id]] = e.target.value;
+      applyFilters();
+      renderView(STATE.route);
+    });
+  });
+  document.getElementById('globalSearch').addEventListener('input', (e)=>{
+    STATE.filters.q = e.target.value;
+    applyFilters();
+    if(STATE.route!=='projetos') goTo('projetos'); else renderProjetos();
+  });
+  document.getElementById('clearFilters').addEventListener('click', ()=>{
+    STATE.filters = {status:'', tier:'', area:'', gerente:'', analista:'', pmo:'', sponsor:'', q:''};
+    document.getElementById('globalSearch').value = '';
+    ['fStatus','fTier','fArea','fGerente','fAnalista','fPmo','fSponsor'].forEach(id=>document.getElementById(id).value='');
+    applyFilters();
+    renderView(STATE.route);
+  });
+
+  document.getElementById('modalOverlay').addEventListener('click', (e)=>{
+    if(e.target.id==='modalOverlay') closeModal();
+  });
+  document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeModal(); });
+
+  // event delegation for open-project / filter-sponsor clicks
+  document.getElementById('viewContainer').addEventListener('click', (e)=>{
+    const openEl = e.target.closest('[data-open]');
+    if(openEl){ openProject(openEl.dataset.open); return; }
+    const sponsorEl = e.target.closest('[data-filter-sponsor]');
+    if(sponsorEl){
+      document.getElementById('fSponsor').value = sponsorEl.dataset.filterSponsor;
+      STATE.filters.sponsor = sponsorEl.dataset.filterSponsor;
+      applyFilters();
+      goTo('projetos');
+      return;
+    }
+    const analistaEl = e.target.closest('[data-open-analista]');
+    if(analistaEl){
+      document.getElementById('fAnalista').value = analistaEl.dataset.openAnalista;
+      STATE.filters.analista = analistaEl.dataset.openAnalista;
+      applyFilters();
+      goTo('projetos');
+    }
+    const ownerHead = e.target.closest('.owner-header');
+    if(ownerHead){
+      const table = ownerHead.nextElementSibling;
+      table.style.display = table.style.display==='none' ? 'table' : 'none';
+    }
+  });
+
+  goTo('home');
+});
+
+</script>
+</body>
+</html>
